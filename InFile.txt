@@ -1,0 +1,5 @@
+11110, Nguyen Van Tuan, QTKD, 1000 1.2 200
+11111, Nguyen Van Toan, KDQT, 1200 1.3 300
+11112, Nguyen Xuan Son, Sport, 1400 1.5 500
+11113, Nguyen Cong Tho, Sport, 1400 1.7 300
+11114, Nguyen Xuan Con, TMDT, 1300 1.2 600
