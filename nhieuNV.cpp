@@ -52,6 +52,46 @@ void InDS(NhanVien ds[], int sl)
 		cout << "\n";
 	}
 }
+void Nhap1NV(NhanVien& nv)
+{
+	cin.ignore();
+	cout << "\nNhap MSNV: ";
+	cin.getline(nv.msnv, 6);
+
+	cout << "Nhap ho ten: ";
+	cin.getline(nv.hoten, 50);
+
+	cout << "Nhap phong: ";
+	cin.getline(nv.phong, 20);
+
+	cout << "Nhap luong co ban: ";
+	cin >> nv.luong;
+
+	cout << "Nhap he so luong: ";
+	cin >> nv.hsl;
+
+	cout << "Nhap thuong: ";
+	cin >> nv.thuong;
+}
+void ThemNhanVien(NhanVien ds[], int& sl)
+{
+	int them;
+	cout << "\nNhap so nhan vien muon them: ";
+	cin >> them;
+
+	if (sl + them > MAX)
+	{
+		cout << "\nVuot qua so luong toi da!";
+		return;
+	}
+
+	for (int i = 0; i < them; i++)
+	{
+		cout << "\n--- Nhap nhan vien thu " << i + 1 << " ---";
+		Nhap1NV(ds[sl]);
+		sl++;
+	}
+}
 void WriteFile(string filename, NhanVien ds[], int sl)
 {
 	ofstream outfile(filename.c_str());
@@ -79,6 +119,11 @@ int main()
 	{
 		InDS(ds, sonv);
 	}
+	ThemNhanVien(ds, sonv);
+
+	cout << "\nDanh sach sau khi them:";
+	InDS(ds, sonv);
+
 	string Fileout = "Conc.txt";
 	WriteFile(Fileout, ds, sonv);
 	cout << "\nIn file thanh cong~";
