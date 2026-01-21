@@ -1,128 +1,215 @@
 #include <iostream>
+#include <string>      // ← THIẾU DÒNG NÀY
 #include <conio.h>
+#include <Windows.h>
+#include <cstring>
 #include <fstream>
 #include <sstream>
-#include <cstring>
-#define MAX 10
+#include <iomanip>
+
 using namespace std;
-struct Nhanvien
-{
-	char msnv[5];
-	char hoten[50];
-	char nam[10];
-	float luong, hsl, thuong;
+#define MAX 100
+string mn_chinh[] = {
+	"CHƯƠNG TRÌNH TUYỂN DỤNG CỦA CÔNG TY X",
+	"In danh sách thông tin công việc",
+	"Sắp xếp thông tin công việc",
+	"Tìm kiếm thông tin công việc",
+	"Thêm thông tin công việc",
+	"Xóa thông tin công việc",
+	"Sửa thông tin công việc",
+	"Kết thúc chương trình!."
 };
-int RF(string filename, Nhanvien ds[], int& sl)
+string mn_sx[] = {
+	"LỰA CHỌN PHƯƠNG PHÁP SẮP XẾP",
+	"Bubblen Sort",
+	"Selection Sort",
+	"Shaker Sort",
+	"Insertion Sort",
+	"Interchange Sort",
+	"BACK!"
+};
+string mn_tcsx[] = {
+	"LỰA CHỌN TIÊU CHÍ",
+	"Sắp xếp theo số thứ tự",
+	"Sắp xếp theo tên",
+	"Sắp xếp theo hạn nộp",
+	"Sắp xếp theo số lượng nhân viên cần tuyển",
+	"Sắp xếp theo mức lương",
+	"BACK!"
+};
+string mn_tk[] = {
+	"LỰA CHỌN PHƯƠNG PHÁP TÌM KIẾM",
+	"Linear Search",
+	"Binary Search",
+	"BACK!"
+};
+string mn_tctk[] = {
+	"LỰA CHỌN TIÊU CHÍ",
+	"Tìm kiếm theo số thứ tự",
+	"Tìm kiếm theo tên",
+	"Tìm kiếm theo mức lương",
+	"BACK!"
+};
+struct TuyenDung
 {
-	ifstream filein(filename.c_str());
-	if (!filein.is_open())
+	char stt[4];
+	char tenCV[50];
+	char ngay[3], thang[3], nam[3];
+	int soluong;
+	float luong;
+};
+void gotoxy(int x, int y)
+{
+	COORD toado;
+	toado.X = x;
+	toado.Y = y;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), toado);
+}
+int ReadFile(string filename, TuyenDung ds[], int& sl)
+{
+	fstream file(filename.c_str());
+	if (!file.is_open())
 	{
-		cout << "\nLoi mo file!";
+		cout << "\nKhông thể mở file!";
 		return 1;
 	}
 	string line;
 	int i = 0;
-	while (getline(filein, line) && i < MAX)
+	while (getline(file, line) && i < MAX)
 	{
-		stringstream tach(line);
-		tach.getline(ds[i].msnv, 5, ',');
-		tach.getline(ds[i].hoten, 50, ',');
-		tach.getline(ds[i].nam, 10, ',');
-		tach >> ds[i].luong;
-		tach >> ds[i].hsl;
-		tach >> ds[i].thuong;
+		stringstream ss(line);
+		ss.getline(ds[i].stt, 4, ',');
+		ss.getline(ds[i].tenCV, 50, ',');
+		ss.getline(ds[i].ngay, 3, '/');
+		ss.getline(ds[i].thang, 3, '/');
+		ss.getline(ds[i].nam, 3, ',');
+		ss >> ds[i].soluong;
+		ss >> ds[i].luong;
 		i++;
 	}
 	sl = i;
 	return 0;
 }
-float tl(Nhanvien nv)
+void InMenu(string mn[], int len)
 {
-	return nv.luong * nv.hsl + nv.thuong;
-}
-void InDS(Nhanvien ds[], int sl)
-{
-	for (int i = 0; i < sl; i++)
+	cout << mn[0] << endl;
+	for (int i = 1; i < len; i++)
 	{
-		cout << "\n--------------NHAN VIEN THU " << i<<"----------------";
-		cout << "\nMa so nhan vien: " << ds[i].msnv;
-		cout << "\nHo ten nhan vien: " << ds[i].hoten;
-		cout << "\nNam sinh: " << ds[i].nam;
-		cout << "\nLuong: " << ds[i].luong;
-		cout << "\nHe so luong: " << ds[i].hsl;
-		cout << "\nThuong: " << ds[i].thuong;
-		cout << "\nThuc lanh: " << tl(ds[i]);
+		cout << i << "." << mn[i] << endl;
 	}
 }
-void ThemNV(Nhanvien ds[], int& sl)
+void InDS(TuyenDung ds[], int sl, int vt = -1)
 {
-	int vt;
+	int cot = 0;
+	int dong = 1;
+	gotoxy(cot, dong);       cout << "STT";
+	gotoxy(cot + 8, dong);  cout << "Tên công việc";
+	gotoxy(cot + 33, dong);  cout << "Hạn nộp";
+	gotoxy(cot + 47, dong);  cout << "Số lượng";
+	gotoxy(cot + 62, dong);  cout << "Mức lương";
+	if (vt == -1) {
+		for (int i = 0; i < sl; i++)
+		{
+			dong = i + 3;
+			gotoxy(cot, dong);        cout << ds[i].stt;
+			gotoxy(cot + 8, dong);   cout << ds[i].tenCV;
+			gotoxy(cot + 33, dong);   cout << ds[i].ngay << "/" << ds[i].thang << "/" << ds[i].nam;
+			gotoxy(cot + 50, dong);   cout << ds[i].soluong;
+			gotoxy(cot + 64, dong);   cout << fixed << setprecision(0) << ds[i].luong;
+		}
+	}
+	else
+	{
+		dong = 3;
+		gotoxy(cot, dong);        cout << ds[vt].stt;
+		gotoxy(cot + 8, dong);   cout << ds[vt].tenCV;
+		gotoxy(cot + 33, dong);   cout << ds[vt].ngay << "/" << ds[vt].thang << "/" << ds[vt].nam;
+		gotoxy(cot + 50, dong);   cout << ds[vt].soluong;
+		gotoxy(cot + 64, dong);   cout << fixed << setprecision(0) << ds[vt].luong;
+	}
+}
+void LinearSearchSTT(TuyenDung ds[], int sl)
+{
+	int stop;
+	char x[4];
 	do
 	{
-		cout << "\nNhap vi tri ma ban muon them nhan vien: ";
-		cin >> vt;
-	} while (vt<0 || vt>sl);
-	for (int i = sl; i > vt; i--)
-	{
-		ds[i] = ds[i - 1];
-	}
-	cin.ignore();
-	cout << "\nNhap ma so nhan vien can them: ";
-	cin.getline(ds[vt].msnv, 5);
-	cout << "\nNhap ho ten nhan vien can them: ";
-	cin.getline(ds[vt].hoten, 50);
-	cout << "\nNhap nam sinh nhan vien can them: ";
-	cin.getline(ds[vt].nam, 10);
-	cout << "\nNhap luong: ";
-	cin >> ds[vt].luong;
-	cout << "\nNhap he so luong: ";
-	cin >> ds[vt].hsl;
-	cout << "\nNhap thuong: ";
-	cin >> ds[vt].thuong;
-	sl++;
-}
-void TimKiem(Nhanvien ds[], int sl)
-{
-	char x[5];
-	cout << "\nNhap ma so nhan vien can tim: ";
-	cin >> x;
+		cout << "\nNhập số thứ tự cần tìm: ";
+		cin >> x;
+		if (strlen(x) != 3)
+		{
+			system("cls");
+			cout << "\nSố thứ tự không hợp lệ, vui lòng nhập lại!";
+		}
+	} while (strlen(x) != 3);
 	for (int i = 0; i < sl; i++)
 	{
-		if (strcmp(ds[i].msnv, x) == 0)
+		if (strcmp(ds[i].stt, x) == 0)
 		{
-			cout << "\nLa nhan vien thu: " << i;
-			cout << "\nHo ten nhan vien: " << ds[i].hoten;
-			cout << "\nNam sinh: " << ds[i].nam;
-			cout << "\nLuong: " << ds[i].luong;
-			cout << "\nHe so luong: " << ds[i].hsl;
-			cout << "\nThuong: " << ds[i].thuong;
-			cout << "\nThuc Lanh: " << tl(ds[i]);
+			system("cls");
+			InDS(ds, sl, i);  
+			cout << "\n\n\nNhấn Enter để quay lại!";
+			stop = _getch();
 			return;
 		}
 	}
-	cout << "\nKhong tim thay nhan vien!";
+	system("cls");
+	cout << "\nKhông tìm thấy công việc!";
+	cout << "\n\n\nNhấn Enter để quay lại!";
+	stop = _getch();
 }
-void Xoa(Nhanvien ds[], int& sl)
+void LinearSearchTen(TuyenDung ds[], int sl)
 {
-	int vtx;
-	do
+	int stop;
+	char ten[50];
+	cin.ignore(); 
+	cout << "\nNhập tên công việc cần tìm: ";
+	cin.getline(ten, 50);
+	for (int i = 0; i < sl; i++)
 	{
-		cout << "\nNhap vi tri can xoa: ";
-		cin >> vtx;
-	} while (vtx<0 || vtx>=sl);
-	for (int i = vtx; i < sl - 1; i++)
-	{
-		ds[i] = ds[i + 1];
+		if (strcmp(ds[i].tenCV, ten) == 0)
+		{
+			system("cls");
+			InDS(ds, sl, i);
+			cout << "\n\n\nNhấn Enter để quay lại!";
+			stop = _getch();
+			return;
+		}
 	}
-	sl--;
+	system("cls");
+	cout << "\nKhông tìm thấy thông tin công việc!";
+	cout << "\n\n\nNhấn Enter để quay lại!";
+	stop = _getch();
 }
-void Sapxep(Nhanvien ds[], int sl)
+void LinearSearchLuong(TuyenDung ds[], int sl)
 {
-	Nhanvien t;
+	int stop;
+	float l;
+	cout << "\nNhập mức lương của công việc mà bạn muốn tìm: ";
+	cin >> l;
+	for (int i = 0; i < sl; i++)
+	{
+		if (l==ds[i].luong)
+		{
+			system("cls");
+			InDS(ds, sl, i);
+			cout << "\n\n\nNhấn Enter để quay lại!";
+			stop = _getch();
+			return;
+		}
+	}
+	system("cls");
+	cout << "\nKhông tìm thấy mức lương phù hợp!";
+	cout << "\n\n\nNhấn Enter để quay lại!";
+	stop = _getch();
+}
+void BubbleSortSTT(TuyenDung ds[], int sl)
+{
+	TuyenDung t;
 	for (int i = 0; i < sl; i++)
 		for (int j = sl - 1; j > i; j--)
 		{
-			if (strcmp(ds[j].msnv, ds[j - 1].msnv) < 0)
+			if (strcmp(ds[j].stt, ds[j - 1].stt) < 0)
 			{
 				t = ds[j];
 				ds[j] = ds[j - 1];
@@ -130,46 +217,371 @@ void Sapxep(Nhanvien ds[], int sl)
 			}
 		}
 }
-void WriteFile(string filename, Nhanvien ds[], int sl)
+void BubbleSortTen(TuyenDung ds[], int sl)
 {
-	ofstream fileout(filename.c_str());
-	if (!fileout)
+	TuyenDung t;
+	for (int i = 0; i < sl - 1; i++)
+		for (int j = sl - 1; j > i; j--)
+		{
+			if (strcmp(ds[j].tenCV, ds[j - 1].tenCV) < 0)
+			{
+				t = ds[j];
+				ds[j] = ds[j - 1];
+				ds[j - 1] = t;
+			}
+		}
+}
+void BubbleSortHanNop(TuyenDung ds[], int sl)
+{
+	TuyenDung t;
+	for (int i = 0; i < sl - 1; i++)
+		for (int j = sl - 1; j > i; j--)
+		{
+			if (
+				strcmp(ds[j].nam, ds[j - 1].nam) < 0 ||
+				(strcmp(ds[j].nam, ds[j - 1].nam) == 0 &&
+					strcmp(ds[j].thang, ds[j - 1].thang) < 0) ||
+				(strcmp(ds[j].nam, ds[j - 1].nam) == 0 &&
+					strcmp(ds[j].thang, ds[j - 1].thang) == 0 &&
+					strcmp(ds[j].ngay, ds[j - 1].ngay) < 0)
+				)
+			{
+				t = ds[j];
+				ds[j] = ds[j - 1];
+				ds[j - 1] = t;
+			}
+		}
+}
+void BubbleSortSoLuong(TuyenDung ds[], int sl)
+{
+	TuyenDung t;
+	for (int i = 0; i < sl - 1; i++)
+		for (int j = sl - 1; j > i; j--)
+		{
+			if (ds[j].soluong < ds[j - 1].soluong)
+			{
+				t = ds[j];
+				ds[j] = ds[j - 1];
+				ds[j - 1] = t;
+			}
+		}
+}
+void BubbleSortLuong(TuyenDung ds[], int sl)
+{
+	TuyenDung t;
+	for (int i = 0; i < sl - 1; i++)
+		for (int j = sl - 1; j > i; j--)
+		{
+			if (ds[j].luong < ds[j - 1].luong)
+			{
+				t = ds[j];
+				ds[j] = ds[j - 1];
+				ds[j - 1] = t;
+			}
+		}
+}
+void BinarySearchSTT(TuyenDung ds[], int sl)
+{
+	int stop;
+	char x[4];
+	do
 	{
-		cout << "\nLoi mo file!";
+		cout << "\nNhập số thứ tự cần tìm: ";
+		cin >> x;
+		if (strlen(x) != 3)
+		{
+			system("cls");
+			cout << "\nSố thứ tự không hợp lệ, vui lòng nhập lại!";
+		}
+	} while (strlen(x) != 3);
+	BubbleSortSTT(ds, sl);
+	int dau = 0;
+	int cuoi = sl - 1;
+	while (dau <= cuoi)
+	{
+		int giua = (dau + cuoi) / 2;
+		int cmp = strcmp(ds[giua].stt, x);
+		if (cmp == 0)
+		{
+			system("cls");
+			InDS(ds, sl, giua);
+			cout << "\n\n\nNhấn Enter để quay lại!";
+			stop = _getch();
+			return;
+		}
+		else if (cmp < 0)
+		{
+			dau = giua + 1;
+		}
+		else
+		{
+			cuoi = giua - 1;
+		}
+	}
+	system("cls");
+	cout << "\nKhông tìm thấy công việc!";
+	cout << "\n\n\nNhấn Enter để quay lại!";
+	stop = _getch();
+}
+void BinarySearchTen(TuyenDung ds[], int sl)
+{
+	int stop;
+	char ten[50];
+	cin.ignore();
+	cout << "\nNhập tên công việc cần tìm: ";
+	cin.getline(ten, 50);
+	BubbleSortTen(ds, sl);
+	int dau = 0, cuoi = sl - 1;
+	while (dau <= cuoi)
+	{
+		int giua = (dau + cuoi) / 2;
+		int cmp = strcmp(ds[giua].tenCV, ten);
+		if (cmp == 0)
+		{
+			system("cls");
+			InDS(ds, sl, giua);
+			cout << "\n\n\nNhấn Enter để quay lại!";
+			stop = _getch();
+			return;
+		}
+		else if (cmp < 0)
+		{
+			dau = giua + 1;
+		}
+		else
+		{
+			cuoi = giua - 1;
+		}
+	}
+	system("cls");
+	cout << "\nKhông tìm thấy công việc!";
+	cout << "\n\n\nNhấn Enter để quay lại!";
+	stop = _getch();
+}
+void BinarySearchLuong(TuyenDung ds[], int sl)
+{
+	int stop;
+	float l;
+	cout << "\nNhập lương công việc cần tìm: ";
+	cin >> l;
+	BubbleSortLuong(ds, sl);
+	int dau = 0, cuoi = sl - 1;
+	while (dau <= cuoi)
+	{
+		int giua = (dau + cuoi) / 2;
+		if (ds[giua].luong ==l)
+		{
+			system("cls");
+			InDS(ds, sl, giua);
+			cout << "\n\n\nNhấn Enter để quay lại!";
+			stop = _getch();
+			return;
+		}
+		else if (ds[giua].luong < l)
+		{
+			dau = giua + 1;
+		}
+		else
+		{
+			cuoi = giua - 1;
+		}
+	}
+	system("cls");
+	cout << "\nKhông tìm thấy công việc!";
+	cout << "\n\n\nNhấn Enter để quay lại!";
+	stop = _getch();
+}
+/*void WriteFile(string filename, TuyenDung ds[], int sl)
+{
+
+	ofstream outfile(filename.c_str());
+	if (!outfile)
+	{
+		cout << "Lỗi mở file!";
 		return;
 	}
 	for (int i = 0; i < sl; i++)
 	{
-		fileout << ds[i].msnv << ", " 
-			<< ds[i].hoten << ", " 
-			<< ds[i].nam << ", " 
-			<< ds[i].luong << " " 
-			<< ds[i].hsl << " " 
-			<< ds[i].thuong << endl;
+		outfile << ds[i].stt << ", ";
+		outfile << ds[i].tenCV << ", ";
+		outfile << ds[i].ngay << "/" << ds[i].thang << "/" << ds[i].nam << ",";
+		outfile << ds[i].soluong << " ";
+		outfile << ds[i].luong << " " << endl;
 	}
-	cout << "\nGhi file thanh cong";
-}
+}*/
 int main()
 {
-	Nhanvien ds[MAX];
-	int sonv = 0;
-	string filein = "Vo.txt";
-	if (RF(filein, ds, sonv) == 0)
+	SetConsoleOutputCP(CP_UTF8);
+	SetConsoleCP(CP_UTF8);
+	TuyenDung danhsach[MAX];
+	int socv = 0, stop;
+	string FileIn = "TD.txt";
+	// Nếu không đọc được file -> kết thúc
+	if (ReadFile(FileIn, danhsach, socv))
 	{
-		InDS(ds, sonv);
-	}
-	ThemNV(ds, sonv);
-	cout << "\n---Danh sach sau khi them nhan vien---";
-	InDS(ds, sonv);
-	TimKiem(ds, sonv);
-	Xoa(ds, sonv);
-	cout << "\n----Danh sach sau khi xoa!----";
-	InDS(ds, sonv);
-	cout << "\n----Danh sach sau khi sap xep!----";
-	Sapxep(ds, sonv);
-	InDS(ds, sonv);
-	string fileout = "Ra.txt";
-	WriteFile(fileout, ds, sonv);
-	int stop = _getch();
+		cout << "\nKhông đọc được file. Chương trình kết thúc!";
+		stop=_getch();
+		return 0;
+	}	
+	int chon, chontk, chonls, chonbs;
+	int chonsx, chonsxbb;
+	do
+	{
+		system("cls");
+		InMenu(mn_chinh, size(mn_chinh));
+		cout << "\nNhập lựa chọn: ";
+		cin >> chon;
+		switch (chon)
+		{
+		case 1:
+			system("cls");
+			InDS(danhsach, socv);
+			stop=_getch();
+			break;
+		case 2:
+			do
+			{
+				system("cls");
+				InMenu(mn_sx, size(mn_sx));
+				cout << "\nLựa chọn của bạn: ";
+				cin >> chonsx;
+				switch (chonsx)
+				{
+				case 1: // Bubble Sort
+					do {
+						system("cls");
+						InMenu(mn_tcsx, size(mn_tcsx));
+						cout << "\nChọn tiêu chí: ";
+						cin >> chonsxbb;
+						switch (chonsxbb)
+						{
+						case 1:
+							system("cls");
+							BubbleSortSTT(danhsach, socv);
+							InDS(danhsach, socv);
+							stop = _getch();
+							break;
+						case 2:
+							system("cls");
+							BubbleSortTen(danhsach, socv);
+							InDS(danhsach, socv);
+							stop = _getch();
+							break;
+						case 3:
+							system("cls");
+							BubbleSortHanNop(danhsach, socv);
+							InDS(danhsach, socv);
+							stop = _getch();
+							break;
+						case 4:
+							system("cls");
+							BubbleSortSoLuong(danhsach, socv);
+							InDS(danhsach, socv);
+							stop = _getch();
+							break;
+						case 5:
+							system("cls");
+							BubbleSortLuong(danhsach, socv);
+							InDS(danhsach, socv);
+							stop = _getch();
+							break;
+						case 6:
+							system("cls");
+							cout << "\nNhấn Enter để quay lại!";
+							stop = _getch();
+							break;
+						}
+					} while (chonsxbb != 6);
+					break;
+				case 6:
+					system("cls");
+					cout << "\nQuay trở lại.";
+					stop = _getch();
+					break;
+				}
+			} while (chonsx != 6);
+			break;    
+		case 3:
+			do
+			{
+				system("cls");
+				InMenu(mn_tk, size(mn_tk));
+				cout << "\nLựa chọn của bạn: ";
+				cin >> chontk;
+				switch (chontk)
+				{
+				case 1:
+					do
+					{
+						system("cls");
+						InMenu(mn_tctk, size(mn_tctk));
+						cout << "\nChọn tiêu chí: ";
+						cin >> chonls;
+						switch (chonls)
+						{
+						case 1:
+							system("cls");
+							LinearSearchSTT(danhsach, socv);
+							break;
+						case 2:
+							system("cls");
+							LinearSearchTen(danhsach, socv);
+							break;
+						case 3:
+							system("cls");
+							LinearSearchLuong(danhsach, socv);
+							break;
+						case 4:
+							system("cls");
+							cout << "\nQuay trở lại.";
+							stop = _getch();
+							break;
+						}
+					} while (chonls != 4);
+					break;
+				case 2:
+					do
+					{
+						system("cls");
+						InMenu(mn_tctk, size(mn_tctk));
+						cout << "\nChọn tiêu chí: ";
+						cin >> chonls;
+						switch (chonls)
+						{
+						case 1:
+							system("cls");
+							BinarySearchSTT(danhsach, socv);
+							break;
+						case 2:
+							system("cls");
+							BinarySearchTen(danhsach, socv);
+							break;
+						case 3:
+							system("cls");
+							BinarySearchLuong(danhsach, socv);
+							break;
+						case 4:
+							system("cls");
+							cout << "\nQuay trở lại.";
+							stop = _getch();
+							break;
+						}
+					} while (chonls != 4);
+					break;
+				case 3:
+					system("cls");
+					cout << "\nQuay trở lại.";
+					stop = _getch();
+					break;
+				}
+			} while (chontk != 3);
+			break;
+		case 7:
+			system("cls");
+			cout << "\nKết thúc chương trình!";
+			break;
+		}
+	} while (chon != 7);
+	stop=_getch();
 	return 0;
 }
