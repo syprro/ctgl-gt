@@ -6,9 +6,8 @@
 #include <fstream>
 #include <sstream>
 #include <iomanip>
-
-using namespace std;
 #define MAX 100
+using namespace std;
 string mn_chinh[] = {
 	"CHƯƠNG TRÌNH TUYỂN DỤNG CỦA CÔNG TY X",
 	"In danh sách thông tin công việc",
@@ -48,6 +47,8 @@ string mn_tctk[] = {
 	"LỰA CHỌN TIÊU CHÍ",
 	"Tìm kiếm theo số thứ tự",
 	"Tìm kiếm theo tên",
+	"Tìm kiếm theo hạn nộp",
+	"Tìm kiếm theo số lượng",
 	"Tìm kiếm theo mức lương",
 	"BACK!"
 };
@@ -195,6 +196,83 @@ void LinearSearchTen(TuyenDung ds[], int sl)
 	}
 	system("cls");
 	cout << "\nKhông tìm thấy thông tin công việc!";
+	cout << "\n\n\n Nhấn phím bất kì để quay lại...";
+	stop = _getch();
+}
+void LinearSearchHanNop(TuyenDung ds[], int sl)
+{
+	int stop;
+	char ngay[3], thang[3], nam[3];
+	int dem = 0;
+	cout << "\nNhập ngày hạn nộp (dd): ";
+	cin >> ngay;
+	cout << "Nhập tháng hạn nộp (mm): ";
+	cin >> thang;
+	cout << "Nhập năm hạn nộp (yy): ";
+	cin >> nam;
+	system("cls");
+	int cot = 0;
+	int dong = 1;
+	gotoxy(cot, dong);       cout << "STT";
+	gotoxy(cot + 8, dong);   cout << "Tên công việc";
+	gotoxy(cot + 33, dong);  cout << "Hạn nộp";
+	gotoxy(cot + 47, dong);  cout << "Số lượng";
+	gotoxy(cot + 62, dong);  cout << "Mức lương";
+	for (int i = 0; i < sl; i++)
+	{
+		if (strcmp(ds[i].ngay, ngay) == 0 &&
+			strcmp(ds[i].thang, thang) == 0 &&
+			strcmp(ds[i].nam, nam) == 0)
+		{
+			dong = 3 + dem;
+			gotoxy(cot, dong);        cout << ds[i].stt;
+			gotoxy(cot + 8, dong);    cout << ds[i].tenCV;
+			gotoxy(cot + 33, dong);   cout << ds[i].ngay << "/" << ds[i].thang << "/" << ds[i].nam;
+			gotoxy(cot + 50, dong);   cout << ds[i].soluong;
+			gotoxy(cot + 64, dong);   cout << ds[i].luong;
+			dem++;
+		}
+	}
+	if (dem == 0)
+	{
+		system("cls");
+		cout << "\nKhông tìm thấy công việc có hạn nộp này!";
+	}
+	cout << "\n\n\n Nhấn phím bất kì để quay lại...";
+	stop = _getch();
+}
+void LinearSearchSoluong(TuyenDung ds[], int sl)
+{
+	int stop;
+	int sol, dem = 0;
+	cout << "\nNhập số lượng nhân viên cần tuyển của công việc mà bạn muốn tìm: ";
+	cin >> sol;
+	system("cls");
+	int cot = 0;
+	int dong = 1;
+	gotoxy(cot, dong);		cout << "STT";
+	gotoxy(cot + 8, dong);	cout << "Tên công việc";
+	gotoxy(cot + 33, dong);	cout << "Hạn nộp";
+	gotoxy(cot + 47, dong);	cout << "Số lượng";
+	gotoxy(cot + 62, dong);	cout << "Mức lương";
+	for (int i = 0; i < sl; i++)
+	{
+		if (ds[i].soluong == sol)
+		{
+			dong = 3 + dem;
+			gotoxy(cot, dong);        cout << ds[i].stt;
+			gotoxy(cot + 8, dong);    cout << ds[i].tenCV;
+			gotoxy(cot + 33, dong);   cout << ds[i].ngay << "/" << ds[i].thang << "/" << ds[i].nam;
+			gotoxy(cot + 50, dong);   cout << ds[i].soluong;
+			gotoxy(cot + 64, dong);   cout << ds[i].luong;
+			dem++;
+		}
+	}
+	if (dem == 0)
+	{
+		system("cls");
+		cout << "\nKhông tìm thấy số lượng phù hợp!";
+	}
 	cout << "\n\n\n Nhấn phím bất kì để quay lại...";
 	stop = _getch();
 }
@@ -388,6 +466,140 @@ void BinarySearchTen(TuyenDung ds[], int sl)
 	}
 	system("cls");
 	cout << "\nKhông tìm thấy công việc!";
+	cout << "\n\n\n Nhấn phím bất kì để quay lại...";
+	stop = _getch();
+}
+void BinarySearchHanNop(TuyenDung ds[], int sl)
+{
+	int stop;
+	char ngay[3], thang[3], nam[3];
+	cout << "\nNhập ngày hạn nộp (dd): ";
+	cin >> ngay;
+	cout << "Nhập tháng hạn nộp (mm): ";
+	cin >> thang;
+	cout << "Nhập năm hạn nộp (yy): ";
+	cin >> nam;
+	BubbleSortHanNop(ds, sl, 1);
+	system("cls");
+	cout << "Lưu ý: Danh sách đã được sắp xếp theo hạn nộp (Tăng dần)\n";
+	int dau = 0, cuoi = sl - 1, giua;
+	int vt = -1;
+	while (dau <= cuoi)
+	{
+		giua = (dau + cuoi) / 2;
+
+		int cmp;
+		if (strcmp(ds[giua].nam, nam) != 0)
+			cmp = strcmp(ds[giua].nam, nam);
+		else if (strcmp(ds[giua].thang, thang) != 0)
+			cmp = strcmp(ds[giua].thang, thang);
+		else
+			cmp = strcmp(ds[giua].ngay, ngay);
+		if (cmp == 0)
+		{
+			vt = giua;
+			break;
+		}
+		else if (cmp < 0)
+			dau = giua + 1;
+		else
+			cuoi = giua - 1;
+	}
+	if (vt == -1)
+	{
+		cout << "\nKhông tìm thấy công việc có hạn nộp này!";
+		cout << "\n\nNhấn phím bất kì để quay lại...";
+		stop = _getch();
+		return;
+	}
+	int cot = 0, dong = 2;
+	gotoxy(cot, dong);       cout << "STT";
+	gotoxy(cot + 8, dong);   cout << "Tên công việc";
+	gotoxy(cot + 33, dong);  cout << "Hạn nộp";
+	gotoxy(cot + 47, dong);  cout << "Số lượng";
+	gotoxy(cot + 62, dong);  cout << "Mức lương";
+	int dem = 0;
+	int i = vt;
+	while (i >= 0 && strcmp(ds[i].ngay, ngay) == 0 && strcmp(ds[i].thang, thang) == 0 && strcmp(ds[i].nam, nam) == 0)
+	{
+		i--;
+	}
+	i++;
+	while (i < sl && strcmp(ds[i].ngay, ngay) == 0 && strcmp(ds[i].thang, thang) == 0 && strcmp(ds[i].nam, nam) == 0)
+	{
+		dong = 4 + dem;
+		gotoxy(cot, dong);        cout << ds[i].stt;
+		gotoxy(cot + 8, dong);    cout << ds[i].tenCV;
+		gotoxy(cot + 33, dong);   cout << ds[i].ngay << "/" << ds[i].thang << "/" << ds[i].nam;
+		gotoxy(cot + 50, dong);   cout << ds[i].soluong;
+		gotoxy(cot + 64, dong);   cout << ds[i].luong;
+		dem++;
+		i++;
+	}
+	cout << "\n\n\nNhấn phím bất kì để quay lại...";
+	stop = _getch();
+}
+void BinarySearchSoluong(TuyenDung ds[], int sl)
+{
+	int stop;
+	float x;
+	cout << "\nNhập số lượng nhân viên cần tuyển của công việc cần tìm: ";
+	cin >> x;
+	BubbleSortSoLuong(ds, sl, 1);
+	system("cls");
+	cout << "Lưu ý: Danh sách đã được sắp xếp theo số lượng! (MĐ: Tăng dần)\n";
+	int dau = 0, cuoi = sl - 1;
+	int giua;
+	int vt = -1;
+	while (dau <= cuoi)
+	{
+		giua = (dau + cuoi) / 2;
+		if (ds[giua].soluong == x)
+		{
+			vt = giua;
+			break;
+		}
+		else if (ds[giua].soluong < x)
+			dau = giua + 1;
+		else
+			cuoi = giua - 1;
+	}
+	int kq[MAX];
+	int dem = 0;
+	if (vt != -1)
+	{
+		int i = vt;
+		while (i >= 0 && ds[i].soluong == x)
+		{
+			kq[dem++] = i;
+			i--;
+		}
+		i = vt + 1;
+		while (i < sl && ds[i].soluong == x)
+		{
+			kq[dem++] = i;
+			i++;
+		}
+		int cot = 0, dong = 2;
+		gotoxy(cot, dong);       cout << "STT";
+		gotoxy(cot + 8, dong);   cout << "Tên công việc";
+		gotoxy(cot + 33, dong);  cout << "Hạn nộp";
+		gotoxy(cot + 47, dong);  cout << "Số lượng";
+		gotoxy(cot + 62, dong);  cout << "Mức lương";
+		for (int j = 0; j < dem; j++)
+		{
+			dong = 4 + j;
+			gotoxy(cot, dong);        cout << ds[kq[j]].stt;
+			gotoxy(cot + 8, dong);    cout << ds[kq[j]].tenCV;
+			gotoxy(cot + 33, dong);   cout << ds[kq[j]].ngay << "/" << ds[kq[j]].thang << "/" << ds[kq[j]].nam;
+			gotoxy(cot + 50, dong);   cout << ds[kq[j]].soluong;
+			gotoxy(cot + 64, dong);   cout << ds[kq[j]].luong;
+		}
+	}
+	else
+	{
+		cout << "\nKhông tìm thấy công việc!";
+	}
 	cout << "\n\n\n Nhấn phím bất kì để quay lại...";
 	stop = _getch();
 }
@@ -1952,15 +2164,23 @@ int main()
 							break;
 						case 3:
 							system("cls");
-							LinearSearchLuong(danhsach, socv);
+							LinearSearchHanNop(danhsach, socv);
 							break;
 						case 4:
+							system("cls");
+							LinearSearchSoluong(danhsach, socv);
+							break;
+						case 5:
+							system("cls");
+							LinearSearchLuong(danhsach, socv);
+							break;
+						case 6:
 							system("cls");
 							cout << "\n Nhấn phím bất kì để quay lại...";
 							stop = _getch();
 							break;
 						}
-					} while (chonls != 4);
+					} while (chonls != 6);
 					break;
 				case 2:
 					do
@@ -1981,15 +2201,23 @@ int main()
 							break;
 						case 3:
 							system("cls");
-							BinarySearchLuong(danhsach, socv);
+							BinarySearchHanNop(danhsach, socv);
 							break;
 						case 4:
+							system("cls");
+							BinarySearchSoluong(danhsach, socv);
+							break;
+						case 5:
+							system("cls");
+							BinarySearchLuong(danhsach, socv);
+							break;
+						case 6:
 							system("cls");
 							cout << "\n Nhấn phím bất kì để quay lại...";
 							stop = _getch();
 							break;
 						}
-					} while (chonls != 4);
+					} while (chonls != 6);
 					break;
 				case 3:
 					system("cls");
