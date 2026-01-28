@@ -1,5 +1,5 @@
 #include <iostream>
-#include <string>      // ← THIẾU DÒNG NÀY
+#include <string>      
 #include <conio.h>
 #include <Windows.h>
 #include <cstring>
@@ -60,6 +60,12 @@ string mn_sua[] = {
 	"Sửa tất cả",
 	"BACK!"
 };
+string mn_mdsx[] = {
+	"LỰA CHỌN MỨC ĐỘ",
+	"Tăng dần",
+	"Giảm dần",
+	"BACK!"
+};
 struct TuyenDung
 {
 	char stt[4];
@@ -98,6 +104,7 @@ int ReadFile(string filename, TuyenDung ds[], int& sl)
 		i++;
 	}
 	sl = i;
+	file.close();
 	return 0;
 }
 void InMenu(string mn[], int len)
@@ -113,7 +120,7 @@ void InDS(TuyenDung ds[], int sl, int vt = -1)
 	int cot = 0;
 	int dong = 1;
 	gotoxy(cot, dong);       cout << "STT";
-	gotoxy(cot + 8, dong);  cout << "Tên công việc";
+	gotoxy(cot + 8, dong);   cout << "Tên công việc";
 	gotoxy(cot + 33, dong);  cout << "Hạn nộp";
 	gotoxy(cot + 47, dong);  cout << "Số lượng";
 	gotoxy(cot + 62, dong);  cout << "Mức lương";
@@ -122,20 +129,20 @@ void InDS(TuyenDung ds[], int sl, int vt = -1)
 		{
 			dong = i + 3;
 			gotoxy(cot, dong);        cout << ds[i].stt;
-			gotoxy(cot + 8, dong);   cout << ds[i].tenCV;
+			gotoxy(cot + 8, dong);    cout << ds[i].tenCV;
 			gotoxy(cot + 33, dong);   cout << ds[i].ngay << "/" << ds[i].thang << "/" << ds[i].nam;
 			gotoxy(cot + 50, dong);   cout << ds[i].soluong;
-			gotoxy(cot + 64, dong);   cout << fixed << setprecision(0) << ds[i].luong;
+			gotoxy(cot + 64, dong);   cout << ds[i].luong;
 		}
 	}
 	else
 	{
 		dong = 3;
 		gotoxy(cot, dong);        cout << ds[vt].stt;
-		gotoxy(cot + 8, dong);   cout << ds[vt].tenCV;
+		gotoxy(cot + 8, dong);    cout << ds[vt].tenCV;
 		gotoxy(cot + 33, dong);   cout << ds[vt].ngay << "/" << ds[vt].thang << "/" << ds[vt].nam;
 		gotoxy(cot + 50, dong);   cout << ds[vt].soluong;
-		gotoxy(cot + 64, dong);   cout << fixed << setprecision(0) << ds[vt].luong;
+		gotoxy(cot + 64, dong);   cout << ds[vt].luong;
 	}
 }
 void LinearSearchSTT(TuyenDung ds[], int sl)
@@ -158,14 +165,14 @@ void LinearSearchSTT(TuyenDung ds[], int sl)
 		{
 			system("cls");
 			InDS(ds, sl, i);
-			cout << "\n\n\nNhấn Enter để quay lại!";
+			cout << "\n\n\n Nhấn phím bất kì để quay lại...";
 			stop = _getch();
 			return;
 		}
 	}
 	system("cls");
 	cout << "\nKhông tìm thấy công việc!";
-	cout << "\n\n\nNhấn Enter để quay lại!";
+	cout << "\n\n\n Nhấn phím bất kì để quay lại...";
 	stop = _getch();
 }
 void LinearSearchTen(TuyenDung ds[], int sl)
@@ -181,45 +188,59 @@ void LinearSearchTen(TuyenDung ds[], int sl)
 		{
 			system("cls");
 			InDS(ds, sl, i);
-			cout << "\n\n\nNhấn Enter để quay lại!";
+			cout << "\n\n\n Nhấn phím bất kì để quay lại...";
 			stop = _getch();
 			return;
 		}
 	}
 	system("cls");
 	cout << "\nKhông tìm thấy thông tin công việc!";
-	cout << "\n\n\nNhấn Enter để quay lại!";
+	cout << "\n\n\n Nhấn phím bất kì để quay lại...";
 	stop = _getch();
 }
 void LinearSearchLuong(TuyenDung ds[], int sl)
 {
 	int stop;
 	float l;
+	int dem = 0;
 	cout << "\nNhập mức lương của công việc mà bạn muốn tìm: ";
 	cin >> l;
+	system("cls");
+	int cot = 0;
+	int dong = 1;
+	gotoxy(cot, dong);       cout << "STT";
+	gotoxy(cot + 8, dong);   cout << "Tên công việc";
+	gotoxy(cot + 33, dong);  cout << "Hạn nộp";
+	gotoxy(cot + 47, dong);  cout << "Số lượng";
+	gotoxy(cot + 62, dong);  cout << "Mức lương";
 	for (int i = 0; i < sl; i++)
 	{
-		if (l == ds[i].luong)
+		if (ds[i].luong == l)
 		{
-			system("cls");
-			InDS(ds, sl, i);
-			cout << "\n\n\nNhấn Enter để quay lại!";
-			stop = _getch();
-			return;
+			dong = 3 + dem;
+			gotoxy(cot, dong);        cout << ds[i].stt;
+			gotoxy(cot + 8, dong);    cout << ds[i].tenCV;
+			gotoxy(cot + 33, dong);   cout << ds[i].ngay << "/" << ds[i].thang << "/" << ds[i].nam;
+			gotoxy(cot + 50, dong);   cout << ds[i].soluong;
+			gotoxy(cot + 64, dong);   cout << ds[i].luong;
+			dem++;
 		}
 	}
-	system("cls");
-	cout << "\nKhông tìm thấy mức lương phù hợp!";
-	cout << "\n\n\nNhấn Enter để quay lại!";
+	if (dem == 0)
+	{
+		system("cls");
+		cout << "\nKhông tìm thấy mức lương phù hợp!";
+	}
+	cout << "\n\n\n Nhấn phím bất kì để quay lại...";
 	stop = _getch();
 }
-void BubbleSortSTT(TuyenDung ds[], int sl)
+void BubbleSortSTT(TuyenDung ds[], int sl, int kieu)
 {
 	TuyenDung t;
-	for (int i = 0; i < sl; i++)
+	for (int i = 0; i < sl - 1; i++)
 		for (int j = sl - 1; j > i; j--)
 		{
-			if (strcmp(ds[j].stt, ds[j - 1].stt) < 0)
+			if ((kieu == 1 && strcmp(ds[j].stt, ds[j - 1].stt) < 0) || (kieu == 2 && strcmp(ds[j].stt, ds[j - 1].stt) > 0))
 			{
 				t = ds[j];
 				ds[j] = ds[j - 1];
@@ -227,13 +248,13 @@ void BubbleSortSTT(TuyenDung ds[], int sl)
 			}
 		}
 }
-void BubbleSortTen(TuyenDung ds[], int sl)
+void BubbleSortTen(TuyenDung ds[], int sl, int kieu)
 {
 	TuyenDung t;
 	for (int i = 0; i < sl - 1; i++)
 		for (int j = sl - 1; j > i; j--)
 		{
-			if (strcmp(ds[j].tenCV, ds[j - 1].tenCV) < 0)
+			if ((kieu == 1 && strcmp(ds[j].tenCV, ds[j - 1].tenCV) < 0) || (kieu == 2 && strcmp(ds[j].tenCV, ds[j - 1].tenCV) > 0))
 			{
 				t = ds[j];
 				ds[j] = ds[j - 1];
@@ -241,19 +262,19 @@ void BubbleSortTen(TuyenDung ds[], int sl)
 			}
 		}
 }
-void BubbleSortHanNop(TuyenDung ds[], int sl)
+void BubbleSortHanNop(TuyenDung ds[], int sl, int kieu)
 {
 	TuyenDung t;
 	for (int i = 0; i < sl - 1; i++)
 		for (int j = sl - 1; j > i; j--)
 		{
-			if (strcmp(ds[j].nam, ds[j - 1].nam) < 0 ||
-				(strcmp(ds[j].nam, ds[j - 1].nam) == 0 &&
-					strcmp(ds[j].thang, ds[j - 1].thang) < 0) ||
-				(strcmp(ds[j].nam, ds[j - 1].nam) == 0 &&
-					strcmp(ds[j].thang, ds[j - 1].thang) == 0 &&
-					strcmp(ds[j].ngay, ds[j - 1].ngay) < 0)
-				)
+			if ((kieu == 1 && (strcmp(ds[j].nam, ds[j - 1].nam) < 0 ||
+				(strcmp(ds[j].nam, ds[j - 1].nam) == 0 && strcmp(ds[j].thang, ds[j - 1].thang) < 0) ||
+				(strcmp(ds[j].nam, ds[j - 1].nam) == 0 && strcmp(ds[j].thang, ds[j - 1].thang) == 0 && strcmp(ds[j].ngay, ds[j - 1].ngay) < 0)))
+				||
+				(kieu == 2 && (strcmp(ds[j].nam, ds[j - 1].nam) > 0 ||
+					(strcmp(ds[j].nam, ds[j - 1].nam) == 0 && strcmp(ds[j].thang, ds[j - 1].thang) > 0) ||
+					(strcmp(ds[j].nam, ds[j - 1].nam) == 0 && strcmp(ds[j].thang, ds[j - 1].thang) == 0 && strcmp(ds[j].ngay, ds[j - 1].ngay) > 0))))
 			{
 				t = ds[j];
 				ds[j] = ds[j - 1];
@@ -261,13 +282,13 @@ void BubbleSortHanNop(TuyenDung ds[], int sl)
 			}
 		}
 }
-void BubbleSortSoLuong(TuyenDung ds[], int sl)
+void BubbleSortSoLuong(TuyenDung ds[], int sl, int kieu)
 {
 	TuyenDung t;
 	for (int i = 0; i < sl - 1; i++)
 		for (int j = sl - 1; j > i; j--)
 		{
-			if (ds[j].soluong < ds[j - 1].soluong)
+			if ((kieu == 1 && ds[j].soluong < ds[j - 1].soluong) || (kieu == 2 && ds[j].soluong > ds[j - 1].soluong))
 			{
 				t = ds[j];
 				ds[j] = ds[j - 1];
@@ -275,13 +296,13 @@ void BubbleSortSoLuong(TuyenDung ds[], int sl)
 			}
 		}
 }
-void BubbleSortLuong(TuyenDung ds[], int sl)
+void BubbleSortLuong(TuyenDung ds[], int sl, int kieu)
 {
 	TuyenDung t;
 	for (int i = 0; i < sl - 1; i++)
 		for (int j = sl - 1; j > i; j--)
 		{
-			if (ds[j].luong < ds[j - 1].luong)
+			if ((kieu == 1 && ds[j].luong < ds[j - 1].luong) || (kieu == 2 && ds[j].luong > ds[j - 1].luong))
 			{
 				t = ds[j];
 				ds[j] = ds[j - 1];
@@ -303,7 +324,9 @@ void BinarySearchSTT(TuyenDung ds[], int sl)
 			cout << "\nSố thứ tự không hợp lệ, vui lòng nhập lại!";
 		}
 	} while (strlen(x) != 3);
-	BubbleSortSTT(ds, sl);
+	BubbleSortSTT(ds, sl, 1);
+	system("cls");
+	cout << "Lưu ý: Danh sách đã được sắp xếp theo số thứ tự công việc! (MĐ: Tăng dần)\n";
 	int dau = 0;
 	int cuoi = sl - 1;
 	while (dau <= cuoi)
@@ -312,9 +335,8 @@ void BinarySearchSTT(TuyenDung ds[], int sl)
 		int cmp = strcmp(ds[giua].stt, x);
 		if (cmp == 0)
 		{
-			system("cls");
 			InDS(ds, sl, giua);
-			cout << "\n\n\nNhấn Enter để quay lại!";
+			cout << "\n\n\n Nhấn phím bất kì để quay lại...";
 			stop = _getch();
 			return;
 		}
@@ -329,7 +351,7 @@ void BinarySearchSTT(TuyenDung ds[], int sl)
 	}
 	system("cls");
 	cout << "\nKhông tìm thấy công việc!";
-	cout << "\n\n\nNhấn Enter để quay lại!";
+	cout << "\n\n\n Nhấn phím bất kì để quay lại...";
 	stop = _getch();
 }
 void BinarySearchTen(TuyenDung ds[], int sl)
@@ -339,17 +361,19 @@ void BinarySearchTen(TuyenDung ds[], int sl)
 	cin.ignore();
 	cout << "\nNhập tên công việc cần tìm: ";
 	cin.getline(ten, 50);
-	BubbleSortTen(ds, sl);
+	BubbleSortTen(ds, sl, 1);
+	system("cls");
+	cout << "Lưu ý: Danh sách đã được sắp xếp theo tên công việc! (MĐ: Tăng dần)\n";
 	int dau = 0, cuoi = sl - 1;
 	while (dau <= cuoi)
 	{
 		int giua = (dau + cuoi) / 2;
 		int cmp = strcmp(ds[giua].tenCV, ten);
+
 		if (cmp == 0)
 		{
-			system("cls");
 			InDS(ds, sl, giua);
-			cout << "\n\n\nNhấn Enter để quay lại!";
+			cout << "\n\n\n Nhấn phím bất kì để quay lại...";
 			stop = _getch();
 			return;
 		}
@@ -364,7 +388,7 @@ void BinarySearchTen(TuyenDung ds[], int sl)
 	}
 	system("cls");
 	cout << "\nKhông tìm thấy công việc!";
-	cout << "\n\n\nNhấn Enter để quay lại!";
+	cout << "\n\n\n Nhấn phím bất kì để quay lại...";
 	stop = _getch();
 }
 void BinarySearchLuong(TuyenDung ds[], int sl)
@@ -373,31 +397,62 @@ void BinarySearchLuong(TuyenDung ds[], int sl)
 	float l;
 	cout << "\nNhập lương công việc cần tìm: ";
 	cin >> l;
-	BubbleSortLuong(ds, sl);
+	BubbleSortLuong(ds, sl, 1);
+	system("cls");
+	cout << "Lưu ý: Danh sách đã được sắp xếp theo mức lương! (MĐ: Tăng dần)\n";
 	int dau = 0, cuoi = sl - 1;
+	int giua;
+	int vt = -1;  
 	while (dau <= cuoi)
 	{
-		int giua = (dau + cuoi) / 2;
+		giua = (dau + cuoi) / 2;
 		if (ds[giua].luong == l)
 		{
-			system("cls");
-			InDS(ds, sl, giua);
-			cout << "\n\n\nNhấn Enter để quay lại!";
-			stop = _getch();
-			return;
+			vt = giua;
+			break;
 		}
 		else if (ds[giua].luong < l)
-		{
 			dau = giua + 1;
-		}
 		else
-		{
 			cuoi = giua - 1;
+	}
+	int kq[MAX];
+	int dem = 0;
+	if (vt != -1)
+	{
+		int i = vt;
+		while (i >= 0 && ds[i].luong == l)
+		{
+			kq[dem++] = i;
+			i--;
+		}
+		i = vt + 1;
+		while (i < sl && ds[i].luong == l)
+		{
+			kq[dem++] = i;
+			i++;
+		}
+		int cot = 0, dong = 2;
+		gotoxy(cot, dong);       cout << "STT";
+		gotoxy(cot + 8, dong);   cout << "Tên công việc";
+		gotoxy(cot + 33, dong);  cout << "Hạn nộp";
+		gotoxy(cot + 47, dong);  cout << "Số lượng";
+		gotoxy(cot + 62, dong);  cout << "Mức lương";
+		for (int j = 0; j < dem; j++)
+		{
+			dong = 4 + j;
+			gotoxy(cot, dong);        cout << ds[kq[j]].stt;
+			gotoxy(cot + 8, dong);    cout << ds[kq[j]].tenCV;
+			gotoxy(cot + 33, dong);   cout << ds[kq[j]].ngay << "/" << ds[kq[j]].thang << "/" << ds[kq[j]].nam;
+			gotoxy(cot + 50, dong);   cout << ds[kq[j]].soluong;
+			gotoxy(cot + 64, dong);   cout << ds[kq[j]].luong;
 		}
 	}
-	system("cls");
-	cout << "\nKhông tìm thấy công việc!";
-	cout << "\n\n\nNhấn Enter để quay lại!";
+	else
+	{
+		cout << "\nKhông tìm thấy công việc!";
+	}
+	cout << "\n\n\n Nhấn phím bất kì để quay lại...";
 	stop = _getch();
 }
 void Swap(TuyenDung& a, TuyenDung& b)
@@ -406,14 +461,14 @@ void Swap(TuyenDung& a, TuyenDung& b)
 	a = b;
 	b = sw;
 }
-void SelectionSortSTT(TuyenDung ds[], int sl)
+void SelectionSortSTT(TuyenDung ds[], int sl, int kieu)
 {
 	for (int i = 0; i < sl - 1; i++)
 	{
 		int min = i;
 		for (int j = i + 1; j < sl; j++)
 		{
-			if (strcmp(ds[j].stt, ds[min].stt) < 0)
+			if ((kieu == 1 && strcmp(ds[j].stt, ds[min].stt) < 0) || (kieu == 2 && strcmp(ds[j].stt, ds[min].stt) > 0))
 			{
 				min = j;
 			}
@@ -424,14 +479,14 @@ void SelectionSortSTT(TuyenDung ds[], int sl)
 		}
 	}
 }
-void SelectionSortTen(TuyenDung ds[], int sl)
+void SelectionSortTen(TuyenDung ds[], int sl, int kieu)
 {
 	for (int i = 0; i < sl - 1; i++)
 	{
 		int min = i;
 		for (int j = i + 1; j < sl; j++)
 		{
-			if (strcmp(ds[j].tenCV, ds[min].tenCV) < 0)
+			if ((kieu == 1 && strcmp(ds[j].tenCV, ds[min].tenCV) < 0) || (kieu == 2 && strcmp(ds[j].tenCV, ds[min].tenCV) > 0))
 			{
 				min = j;
 			}
@@ -442,19 +497,22 @@ void SelectionSortTen(TuyenDung ds[], int sl)
 		}
 	}
 }
-void SelectionSortHanNop(TuyenDung ds[], int sl)
+void SelectionSortHanNop(TuyenDung ds[], int sl, int kieu)
 {
 	for (int i = 0; i < sl - 1; i++)
 	{
 		int min = i;
 		for (int j = i + 1; j < sl; j++)
 		{
-			if (strcmp(ds[j].nam, ds[min].nam) < 0 ||
-				(strcmp(ds[j].nam, ds[min].nam) == 0 &&
-					strcmp(ds[j].thang, ds[min].thang) < 0) ||
-				(strcmp(ds[j].nam, ds[min].nam) == 0 &&
-					strcmp(ds[j].thang, ds[min].thang) == 0 &&
-					strcmp(ds[j].ngay, ds[min].ngay) < 0))
+			if (kieu == 1 &&(strcmp(ds[j].nam, ds[min].nam) < 0 || 
+				(strcmp(ds[j].nam, ds[min].nam) == 0 &&strcmp(ds[j].thang, ds[min].thang) < 0) || 
+				(strcmp(ds[j].nam, ds[min].nam) == 0 &&strcmp(ds[j].thang, ds[min].thang) == 0 && strcmp(ds[j].ngay, ds[min].ngay) < 0)))
+			{
+				min = j;
+			}
+			if (kieu == 2 && (strcmp(ds[j].nam, ds[min].nam) > 0 ||
+				(strcmp(ds[j].nam, ds[min].nam) == 0 && strcmp(ds[j].thang, ds[min].thang) > 0) ||
+				(strcmp(ds[j].nam, ds[min].nam) == 0 && strcmp(ds[j].thang, ds[min].thang) == 0 && strcmp(ds[j].ngay, ds[min].ngay) > 0)))
 			{
 				min = j;
 			}
@@ -465,14 +523,14 @@ void SelectionSortHanNop(TuyenDung ds[], int sl)
 		}
 	}
 }
-void SelectionSortSoluong(TuyenDung ds[], int sl)
+void SelectionSortSoluong(TuyenDung ds[], int sl, int kieu)
 {
 	for (int i = 0; i < sl - 1; i++)
 	{
 		int min = i;
 		for (int j = i + 1; j < sl; j++)
 		{
-			if (ds[j].soluong < ds[min].soluong)
+			if ((kieu == 1 && ds[j].soluong < ds[min].soluong) || (kieu == 2 && ds[j].soluong > ds[min].soluong))
 			{
 				min = j;
 			}
@@ -483,14 +541,14 @@ void SelectionSortSoluong(TuyenDung ds[], int sl)
 		}
 	}
 }
-void SelectionSortLuong(TuyenDung ds[], int sl)
+void SelectionSortLuong(TuyenDung ds[], int sl, int kieu)
 {
 	for (int i = 0; i < sl - 1; i++)
 	{
 		int min = i;
 		for (int j = i + 1; j < sl; j++)
 		{
-			if (ds[j].luong < ds[min].luong)
+			if ((kieu == 1 && ds[j].luong < ds[min].luong) || (kieu == 2 && ds[j].luong > ds[min].luong))
 			{
 				min = j;
 			}
@@ -501,14 +559,14 @@ void SelectionSortLuong(TuyenDung ds[], int sl)
 		}
 	}
 }
-void ShakerSortSTT(TuyenDung ds[], int sl)
+void ShakerSortSTT(TuyenDung ds[], int sl, int kieu)
 {
 	int l = 0, r = sl - 1, k = sl - 1;
 	while (l < r)
 	{
 		for (int i = r; i > l; i--)
 		{
-			if (strcmp(ds[i].stt, ds[i - 1].stt) < 0)
+			if ((kieu == 1 && strcmp(ds[i].stt, ds[i - 1].stt) < 0) || (kieu == 2 && strcmp(ds[i].stt, ds[i - 1].stt) > 0))
 			{
 				Swap(ds[i], ds[i - 1]);
 				k = i;
@@ -517,7 +575,7 @@ void ShakerSortSTT(TuyenDung ds[], int sl)
 		l = k;
 		for (int j = l; j < r; j++)
 		{
-			if (strcmp(ds[j].stt, ds[j + 1].stt) > 0)
+			if ((kieu == 1 && strcmp(ds[j].stt, ds[j + 1].stt) > 0) || (kieu == 2 && strcmp(ds[j].stt, ds[j + 1].stt) < 0))
 			{
 				Swap(ds[j], ds[j + 1]);
 				k = j;
@@ -526,14 +584,14 @@ void ShakerSortSTT(TuyenDung ds[], int sl)
 		r = k;
 	}
 }
-void ShakerSortTen(TuyenDung ds[], int sl)
+void ShakerSortTen(TuyenDung ds[], int sl, int kieu)
 {
 	int l = 0, r = sl - 1, k = sl - 1;
 	while (l < r)
 	{
 		for (int i = r; i > l; i--)
 		{
-			if (strcmp(ds[i].tenCV, ds[i - 1].tenCV) < 0)
+			if ((kieu == 1 && strcmp(ds[i].tenCV, ds[i - 1].tenCV) < 0) || (kieu == 2 && strcmp(ds[i].tenCV, ds[i - 1].tenCV) > 0))
 			{
 				Swap(ds[i], ds[i - 1]);
 				k = i;
@@ -542,7 +600,7 @@ void ShakerSortTen(TuyenDung ds[], int sl)
 		l = k;
 		for (int j = l; j < r; j++)
 		{
-			if (strcmp(ds[j].tenCV, ds[j + 1].tenCV) > 0)
+			if ((kieu == 1 && strcmp(ds[j].tenCV, ds[j + 1].tenCV) > 0) || (kieu == 2 && strcmp(ds[j].tenCV, ds[j + 1].tenCV) < 0))
 			{
 				Swap(ds[j], ds[j + 1]);
 				k = j;
@@ -551,19 +609,20 @@ void ShakerSortTen(TuyenDung ds[], int sl)
 		r = k;
 	}
 }
-void ShakerSortHanNop(TuyenDung ds[], int sl)
+void ShakerSortHanNop(TuyenDung ds[], int sl, int kieu)
 {
 	int l = 0, r = sl - 1, k = sl - 1;
 	while (l < r)
 	{
 		for (int i = r; i > l; i--)
 		{
-			if (strcmp(ds[i].nam, ds[i - 1].nam) < 0 ||
-				(strcmp(ds[i].nam, ds[i - 1].nam) == 0 &&
-					strcmp(ds[i].thang, ds[i - 1].thang) < 0) ||
-				(strcmp(ds[i].nam, ds[i - 1].nam) == 0 &&
-					strcmp(ds[i].thang, ds[i - 1].thang) == 0 &&
-					strcmp(ds[i].ngay, ds[i - 1].ngay) < 0))
+			if ((kieu == 1 && (strcmp(ds[i].nam, ds[i - 1].nam) < 0 ||
+				(strcmp(ds[i].nam, ds[i - 1].nam) == 0 && strcmp(ds[i].thang, ds[i - 1].thang) < 0) ||
+				(strcmp(ds[i].nam, ds[i - 1].nam) == 0 && strcmp(ds[i].thang, ds[i - 1].thang) == 0 && strcmp(ds[i].ngay, ds[i - 1].ngay) < 0)))
+				||
+				(kieu == 2 && (strcmp(ds[i].nam, ds[i - 1].nam) > 0 ||
+					(strcmp(ds[i].nam, ds[i - 1].nam) == 0 && strcmp(ds[i].thang, ds[i - 1].thang) > 0) ||
+					(strcmp(ds[i].nam, ds[i - 1].nam) == 0 && strcmp(ds[i].thang, ds[i - 1].thang) == 0 && strcmp(ds[i].ngay, ds[i - 1].ngay) > 0))))
 			{
 				Swap(ds[i], ds[i - 1]);
 				k = i;
@@ -572,12 +631,13 @@ void ShakerSortHanNop(TuyenDung ds[], int sl)
 		l = k;
 		for (int j = l; j < r; j++)
 		{
-			if (strcmp(ds[j].nam, ds[j + 1].nam) > 0 ||
-				(strcmp(ds[j].nam, ds[j + 1].nam) == 0 &&
-					strcmp(ds[j].thang, ds[j + 1].thang) > 0) ||
-				(strcmp(ds[j].nam, ds[j + 1].nam) == 0 &&
-					strcmp(ds[j].thang, ds[j + 1].thang) == 0 &&
-					strcmp(ds[j].ngay, ds[j + 1].ngay) > 0))
+			if ((kieu == 1 && (strcmp(ds[j].nam, ds[j + 1].nam) > 0 ||
+				(strcmp(ds[j].nam, ds[j + 1].nam) == 0 && strcmp(ds[j].thang, ds[j + 1].thang) > 0) ||
+				(strcmp(ds[j].nam, ds[j + 1].nam) == 0 && strcmp(ds[j].thang, ds[j + 1].thang) == 0 && strcmp(ds[j].ngay, ds[j + 1].ngay) > 0)))
+				||
+				(kieu == 2 && (strcmp(ds[j].nam, ds[j + 1].nam) < 0 ||
+					(strcmp(ds[j].nam, ds[j + 1].nam) == 0 && strcmp(ds[j].thang, ds[j + 1].thang) < 0) ||
+					(strcmp(ds[j].nam, ds[j + 1].nam) == 0 && strcmp(ds[j].thang, ds[j + 1].thang) == 0 && strcmp(ds[j].ngay, ds[j + 1].ngay) < 0))))
 			{
 				Swap(ds[j], ds[j + 1]);
 				k = j;
@@ -586,14 +646,14 @@ void ShakerSortHanNop(TuyenDung ds[], int sl)
 		r = k;
 	}
 }
-void ShakerSortSoluong(TuyenDung ds[], int sl)
+void ShakerSortSoluong(TuyenDung ds[], int sl, int kieu)
 {
 	int l = 0, r = sl - 1, k = sl - 1;
 	while (l < r)
 	{
 		for (int i = r; i > l; i--)
 		{
-			if (ds[i].soluong < ds[i - 1].soluong)
+			if ((kieu == 1 && ds[i].soluong < ds[i - 1].soluong) || (kieu == 2 && ds[i].soluong > ds[i - 1].soluong))
 			{
 				Swap(ds[i], ds[i - 1]);
 				k = i;
@@ -602,7 +662,7 @@ void ShakerSortSoluong(TuyenDung ds[], int sl)
 		l = k;
 		for (int j = l; j < r; j++)
 		{
-			if (ds[j].soluong > ds[j + 1].soluong)
+			if ((kieu == 1 && ds[j].soluong > ds[j + 1].soluong) || (kieu == 2 && ds[j].soluong < ds[j + 1].soluong))
 			{
 				Swap(ds[j], ds[j + 1]);
 				k = j;
@@ -611,14 +671,14 @@ void ShakerSortSoluong(TuyenDung ds[], int sl)
 		r = k;
 	}
 }
-void ShakerSortLuong(TuyenDung ds[], int sl)
+void ShakerSortLuong(TuyenDung ds[], int sl, int kieu)
 {
 	int l = 0, r = sl - 1, k = sl - 1;
 	while (l < r)
 	{
 		for (int i = r; i > l; i--)
 		{
-			if (ds[i].luong < ds[i - 1].luong)
+			if ((kieu == 1 && ds[i].luong < ds[i - 1].luong) || (kieu == 2 && ds[i].luong > ds[i - 1].luong))
 			{
 				Swap(ds[i], ds[i - 1]);
 				k = i;
@@ -627,7 +687,7 @@ void ShakerSortLuong(TuyenDung ds[], int sl)
 		l = k;
 		for (int j = l; j < r; j++)
 		{
-			if (ds[j].luong > ds[j + 1].luong)
+			if ((kieu == 1 && ds[j].luong > ds[j + 1].luong) || (kieu == 2 && ds[j].luong < ds[j + 1].luong))
 			{
 				Swap(ds[j], ds[j + 1]);
 				k = j;
@@ -636,7 +696,7 @@ void ShakerSortLuong(TuyenDung ds[], int sl)
 		r = k;
 	}
 }
-void InsertionSortSTT(TuyenDung ds[], int sl)
+void InsertionSortSTT(TuyenDung ds[], int sl, int kieu)
 {
 	int t;
 	TuyenDung a;
@@ -644,45 +704,9 @@ void InsertionSortSTT(TuyenDung ds[], int sl)
 	{
 		a = ds[i];
 		t = i - 1;
-		while (t >= 0 && strcmp(a.stt, ds[t].stt) < 0)
-		{
-			ds[t + 1] = ds[t];
-			t--;
-		}
-		ds[t + 1] = a;
-	}
-}
-void InsertionSortTen(TuyenDung ds[], int sl)
-{
-	int t;
-	TuyenDung a;
-	for (int i = 1; i < sl; i++)
-	{
-		a = ds[i];
-		t = i - 1;
-		while (t >= 0 && strcmp(a.tenCV, ds[t].tenCV) < 0)
-		{
-			ds[t + 1] = ds[t];
-			t--;
-		}
-		ds[t + 1] = a;
-	}
-}
-void InsertionSortHanNop(TuyenDung ds[], int sl)
-{
-	int t;
-	TuyenDung a;
-	for (int i = 1; i < sl; i++)
-	{
-		a = ds[i];
-		t = i - 1;
+
 		while (t >= 0 &&
-			(strcmp(a.nam, ds[t].nam) < 0 ||
-				(strcmp(a.nam, ds[t].nam) == 0 &&
-					strcmp(a.thang, ds[t].thang) < 0) ||
-				(strcmp(a.nam, ds[t].nam) == 0 &&
-					strcmp(a.thang, ds[t].thang) == 0 &&
-					strcmp(a.ngay, ds[t].ngay) < 0)))
+			((kieu == 1 && strcmp(a.stt, ds[t].stt) < 0) || (kieu == 2 && strcmp(a.stt, ds[t].stt) > 0)))
 		{
 			ds[t + 1] = ds[t];
 			t--;
@@ -690,7 +714,7 @@ void InsertionSortHanNop(TuyenDung ds[], int sl)
 		ds[t + 1] = a;
 	}
 }
-void InsertionSortSoluong(TuyenDung ds[], int sl)
+void InsertionSortTen(TuyenDung ds[], int sl, int kieu)
 {
 	int t;
 	TuyenDung a;
@@ -698,7 +722,8 @@ void InsertionSortSoluong(TuyenDung ds[], int sl)
 	{
 		a = ds[i];
 		t = i - 1;
-		while (t >= 0 && a.soluong < ds[t].soluong)
+		while (t >= 0 && 
+			((kieu == 1 && strcmp(a.tenCV, ds[t].tenCV) < 0) || (kieu == 2 && strcmp(a.tenCV, ds[t].tenCV) > 0)))
 		{
 			ds[t + 1] = ds[t];
 			t--;
@@ -706,7 +731,30 @@ void InsertionSortSoluong(TuyenDung ds[], int sl)
 		ds[t + 1] = a;
 	}
 }
-void InsertionSortLuong(TuyenDung ds[], int sl)
+void InsertionSortHanNop(TuyenDung ds[], int sl, int kieu)
+{
+	int t;
+	TuyenDung a;
+
+	for (int i = 1; i < sl; i++)
+	{
+		a = ds[i];
+		t = i - 1;
+
+		while (t >= 0 && ((kieu == 1 && (strcmp(a.nam, ds[t].nam) < 0 ||
+			(strcmp(a.nam, ds[t].nam) == 0 && strcmp(a.thang, ds[t].thang) < 0) ||
+			(strcmp(a.nam, ds[t].nam) == 0 && strcmp(a.thang, ds[t].thang) == 0 && strcmp(a.ngay, ds[t].ngay) < 0)))
+			|| (kieu == 2 && (strcmp(a.nam, ds[t].nam) > 0 ||
+				(strcmp(a.nam, ds[t].nam) == 0 && strcmp(a.thang, ds[t].thang) > 0) ||
+				(strcmp(a.nam, ds[t].nam) == 0 && strcmp(a.thang, ds[t].thang) == 0 && strcmp(a.ngay, ds[t].ngay) > 0)))))
+		{
+			ds[t + 1] = ds[t];
+			t--;
+		}
+		ds[t + 1] = a;
+	}
+}
+void InsertionSortSoluong(TuyenDung ds[], int sl, int kieu)
 {
 	int t;
 	TuyenDung a;
@@ -714,7 +762,7 @@ void InsertionSortLuong(TuyenDung ds[], int sl)
 	{
 		a = ds[i];
 		t = i - 1;
-		while (t >= 0 && a.luong < ds[t].luong)
+		while (t >= 0 && ((kieu == 1 && a.soluong < ds[t].soluong) || (kieu == 2 && a.soluong > ds[t].soluong)))
 		{
 			ds[t + 1] = ds[t];
 			t--;
@@ -722,70 +770,87 @@ void InsertionSortLuong(TuyenDung ds[], int sl)
 		ds[t + 1] = a;
 	}
 }
-void InterchangeSortSTT(TuyenDung ds[], int sl)
+void InsertionSortLuong(TuyenDung ds[], int sl, int kieu)
+{
+	int t;
+	TuyenDung a;
+	for (int i = 1; i < sl; i++)
+	{
+		a = ds[i];
+		t = i - 1;
+		while (t >= 0 && ((kieu == 1 && a.luong < ds[t].luong) || (kieu == 2 && a.luong > ds[t].luong)))
+		{
+			ds[t + 1] = ds[t];
+			t--;
+		}
+		ds[t + 1] = a;
+	}
+}
+void InterchangeSortSTT(TuyenDung ds[], int sl, int kieu)
 {
 	for (int i = 0; i < sl - 1; i++)
 	{
 		for (int j = i + 1; j < sl; j++)
 		{
-			if (strcmp(ds[i].stt, ds[j].stt) > 0)
+			if ((kieu == 1 && strcmp(ds[i].stt, ds[j].stt) > 0) || (kieu == 2 && strcmp(ds[i].stt, ds[j].stt) < 0))
 			{
 				Swap(ds[i], ds[j]);
 			}
 		}
 	}
 }
-void InterchangeSortTen(TuyenDung ds[], int sl)
+void InterchangeSortTen(TuyenDung ds[], int sl, int kieu)
 {
 	for (int i = 0; i < sl - 1; i++)
 	{
 		for (int j = i + 1; j < sl; j++)
 		{
-			if (strcmp(ds[i].tenCV, ds[j].tenCV) > 0)
+			if ((kieu == 1 && strcmp(ds[i].tenCV, ds[j].tenCV) > 0) || (kieu == 2 && strcmp(ds[i].tenCV, ds[j].tenCV) < 0))
 			{
 				Swap(ds[i], ds[j]);
 			}
 		}
 	}
 }
-void InterchangeSortHanNop(TuyenDung ds[], int sl)
+void InterchangeSortHanNop(TuyenDung ds[], int sl, int kieu)
 {
 	for (int i = 0; i < sl - 1; i++)
 	{
 		for (int j = i + 1; j < sl; j++)
 		{
-			if (strcmp(ds[i].nam, ds[j].nam) > 0 ||
-				(strcmp(ds[i].nam, ds[j].nam) == 0 &&
-					strcmp(ds[i].thang, ds[j].thang) > 0) ||
-				(strcmp(ds[i].nam, ds[j].nam) == 0 &&
-					strcmp(ds[i].thang, ds[j].thang) == 0 &&
-					strcmp(ds[i].ngay, ds[j].ngay) > 0))
+			if ((kieu == 1 && (strcmp(ds[i].nam, ds[j].nam) > 0 ||
+				(strcmp(ds[i].nam, ds[j].nam) == 0 && strcmp(ds[i].thang, ds[j].thang) > 0) ||
+				(strcmp(ds[i].nam, ds[j].nam) == 0 && strcmp(ds[i].thang, ds[j].thang) == 0 && strcmp(ds[i].ngay, ds[j].ngay) > 0)))
+				||
+				(kieu == 2 && (strcmp(ds[i].nam, ds[j].nam) < 0 ||
+					(strcmp(ds[i].nam, ds[j].nam) == 0 && strcmp(ds[i].thang, ds[j].thang) < 0) ||
+					(strcmp(ds[i].nam, ds[j].nam) == 0 && strcmp(ds[i].thang, ds[j].thang) == 0 && strcmp(ds[i].ngay, ds[j].ngay) < 0))))
 			{
 				Swap(ds[i], ds[j]);
 			}
 		}
 	}
 }
-void InterchangeSortSoluong(TuyenDung ds[], int sl)
+void InterchangeSortSoluong(TuyenDung ds[], int sl, int kieu)
 {
 	for (int i = 0; i < sl - 1; i++)
 	{
 		for (int j = i + 1; j < sl; j++)
 		{
-			if (ds[i].soluong > ds[j].soluong)
+			if ((kieu == 1 && ds[i].soluong > ds[j].soluong) || (kieu == 2 && ds[i].soluong < ds[j].soluong))
 			{
 				Swap(ds[i], ds[j]);
 			}
 		}
 	}
 }
-void InterchangeSortLuong(TuyenDung ds[], int sl)
+void InterchangeSortLuong(TuyenDung ds[], int sl, int kieu)
 {
 	for (int i = 0; i < sl - 1; i++)
 	{
 		for (int j = i + 1; j < sl; j++)
 		{
-			if (ds[i].luong > ds[j].luong)
+			if ((kieu == 1 && ds[i].luong > ds[j].luong) || (kieu == 2 && ds[i].luong < ds[j].luong))
 			{
 				Swap(ds[i], ds[j]);
 			}
@@ -874,7 +939,7 @@ void XoaTTCV(TuyenDung ds[], int& sl)
 	cin >> chon;
 	switch (chon)
 	{
-	case 1: // Xoá theo vị trí
+	case 1:
 	{
 		int vtx;
 		do
@@ -893,7 +958,7 @@ void XoaTTCV(TuyenDung ds[], int& sl)
 		int stop = _getch();
 		break;
 	}
-	case 2: // Xoá theo STT
+	case 2: 
 	{
 		char stt[4];
 		int tim = -1;
@@ -1047,7 +1112,7 @@ int main()
 		stop = _getch();
 		return 0;
 	}
-	int chon, chontk, chonls, chonbs;
+	int chon, chontk, chonls, chonmd;
 	int chonsx, chontcsx;
 	do
 	{
@@ -1080,38 +1145,148 @@ int main()
 						switch (chontcsx)
 						{
 						case 1:
-							system("cls");
-							BubbleSortSTT(danhsach, socv);
-							InDS(danhsach, socv);
-							stop = _getch();
+							do
+							{
+								system("cls");
+								InMenu(mn_mdsx, size(mn_mdsx));
+								cout << "\n Mời bạn chọn: ";
+								cin >> chonmd;
+								switch (chonmd)
+								{
+								case 1:
+									system("cls");
+									BubbleSortSTT(danhsach, socv, 1);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 2:
+									system("cls");
+									BubbleSortSTT(danhsach, socv, 2);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 3:
+									cout << "\n Nhấn phím bất kì để quay lại...";
+									stop = _getch();
+									break;
+								}
+							} while (chonmd != 3);
 							break;
 						case 2:
-							system("cls");
-							BubbleSortTen(danhsach, socv);
-							InDS(danhsach, socv);
-							stop = _getch();
+							do
+							{
+								system("cls");
+								InMenu(mn_mdsx, size(mn_mdsx));
+								cout << "\n Mời bạn chọn: ";
+								cin >> chonmd;
+								switch (chonmd)
+								{
+								case 1:
+									system("cls");
+									BubbleSortTen(danhsach, socv, 1);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 2:
+									system("cls");
+									BubbleSortTen(danhsach, socv, 2);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 3:
+									cout << "\n Nhấn phím bất kì để quay lại...";
+									stop = _getch();
+									break;
+								}
+							} while (chonmd != 3);
 							break;
 						case 3:
-							system("cls");
-							BubbleSortHanNop(danhsach, socv);
-							InDS(danhsach, socv);
-							stop = _getch();
+							do
+							{
+								system("cls");
+								InMenu(mn_mdsx, size(mn_mdsx));
+								cout << "\n Mời bạn chọn: ";
+								cin >> chonmd;
+								switch (chonmd)
+								{
+								case 1:
+									system("cls");
+									BubbleSortHanNop(danhsach, socv, 1);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 2:
+									system("cls");
+									BubbleSortHanNop(danhsach, socv, 2);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 3:
+									cout << "\n Nhấn phím bất kì để quay lại...";
+									stop = _getch();
+									break;
+								}
+							} while (chonmd != 3);
 							break;
 						case 4:
-							system("cls");
-							BubbleSortSoLuong(danhsach, socv);
-							InDS(danhsach, socv);
-							stop = _getch();
+							do
+							{
+								system("cls");
+								InMenu(mn_mdsx, size(mn_mdsx));
+								cout << "\n Mời bạn chọn: ";
+								cin >> chonmd;
+								switch (chonmd)
+								{
+								case 1:
+									system("cls");
+									BubbleSortSoLuong(danhsach, socv, 1);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 2:
+									system("cls");
+									BubbleSortSoLuong(danhsach, socv, 2);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 3:
+									cout << "\n Nhấn phím bất kì để quay lại...";
+									stop = _getch();
+									break;
+								}
+							} while (chonmd != 3);
 							break;
 						case 5:
-							system("cls");
-							BubbleSortLuong(danhsach, socv);
-							InDS(danhsach, socv);
-							stop = _getch();
+							do
+							{
+								system("cls");
+								InMenu(mn_mdsx, size(mn_mdsx));
+								cout << "\n Mời bạn chọn: ";
+								cin >> chonmd;
+								switch (chonmd)
+								{
+								case 1:
+									system("cls");
+									BubbleSortLuong(danhsach, socv, 1);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 2:
+									system("cls");
+									BubbleSortLuong(danhsach, socv, 2);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 3:
+									cout << "\n Nhấn phím bất kì để quay lại...";
+									stop = _getch();
+									break;
+								}
+							} while (chonmd != 3);
 							break;
 						case 6:
 							system("cls");
-							cout << "\nNhấn Enter để quay lại!";
+							cout << "\n Nhấn phím bất kì để quay lại...";
 							stop = _getch();
 							break;
 						}
@@ -1126,38 +1301,148 @@ int main()
 						switch (chontcsx)
 						{
 						case 1:
-							system("cls");
-							SelectionSortSTT(danhsach, socv);
-							InDS(danhsach, socv);
-							stop = _getch();
+							do
+							{
+								system("cls");
+								InMenu(mn_mdsx, size(mn_mdsx));
+								cout << "\n Mời bạn chọn: ";
+								cin >> chonmd;
+								switch (chonmd)
+								{
+								case 1:
+									system("cls");
+									SelectionSortSTT(danhsach, socv, 1);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 2:
+									system("cls");
+									SelectionSortSTT(danhsach, socv, 2);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 3:
+									cout << "\n Nhấn phím bất kì để quay lại...";
+									stop = _getch();
+									break;
+								}
+							} while (chonmd != 3);
 							break;
 						case 2:
-							system("cls");
-							SelectionSortTen(danhsach, socv);
-							InDS(danhsach, socv);
-							stop = _getch();
+							do
+							{
+								system("cls");
+								InMenu(mn_mdsx, size(mn_mdsx));
+								cout << "\n Mời bạn chọn: ";
+								cin >> chonmd;
+								switch (chonmd)
+								{
+								case 1:
+									system("cls");
+									SelectionSortTen(danhsach, socv, 1);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 2:
+									system("cls");
+									SelectionSortTen(danhsach, socv, 2);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 3:
+									cout << "\n Nhấn phím bất kì để quay lại...";
+									stop = _getch();
+									break;
+								}
+							} while (chonmd != 3);
 							break;
 						case 3:
-							system("cls");
-							SelectionSortHanNop(danhsach, socv);
-							InDS(danhsach, socv);
-							stop = _getch();
+							do
+							{
+								system("cls");
+								InMenu(mn_mdsx, size(mn_mdsx));
+								cout << "\n Mời bạn chọn: ";
+								cin >> chonmd;
+								switch (chonmd)
+								{
+								case 1:
+									system("cls");
+									SelectionSortHanNop(danhsach, socv, 1);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 2:
+									system("cls");
+									SelectionSortHanNop(danhsach, socv, 2);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 3:
+									cout << "\n Nhấn phím bất kì để quay lại...";
+									stop = _getch();
+									break;
+								}
+							} while (chonmd != 3);
 							break;
 						case 4:
-							system("cls");
-							SelectionSortSoluong(danhsach, socv);
-							InDS(danhsach, socv);
-							stop = _getch();
+							do
+							{
+								system("cls");
+								InMenu(mn_mdsx, size(mn_mdsx));
+								cout << "\n Mời bạn chọn: ";
+								cin >> chonmd;
+								switch (chonmd)
+								{
+								case 1:
+									system("cls");
+									SelectionSortSoluong(danhsach, socv, 1);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 2:
+									system("cls");
+									SelectionSortSoluong(danhsach, socv, 2);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 3:
+									cout << "\n Nhấn phím bất kì để quay lại...";
+									stop = _getch();
+									break;
+								}
+							} while (chonmd != 3);
 							break;
 						case 5:
-							system("cls");
-							SelectionSortLuong(danhsach, socv);
-							InDS(danhsach, socv);
-							stop = _getch();
+							do
+							{
+								system("cls");
+								InMenu(mn_mdsx, size(mn_mdsx));
+								cout << "\n Mời bạn chọn: ";
+								cin >> chonmd;
+								switch (chonmd)
+								{
+								case 1:
+									system("cls");
+									SelectionSortLuong(danhsach, socv, 1);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 2:
+									system("cls");
+									SelectionSortLuong(danhsach, socv, 2);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 3:
+									cout << "\n Nhấn phím bất kì để quay lại...";
+									stop = _getch();
+									break;
+								}
+							} while (chonmd != 3);
 							break;
 						case 6:
 							system("cls");
-							cout << "\nNhấn Enter để quay lại!";
+							cout << "\n Nhấn phím bất kì để quay lại...";
 							stop = _getch();
 							break;
 						}
@@ -1172,38 +1457,148 @@ int main()
 						switch (chontcsx)
 						{
 						case 1:
-							system("cls");
-							ShakerSortSTT(danhsach, socv);
-							InDS(danhsach, socv);
-							stop = _getch();
+							do
+							{
+								system("cls");
+								InMenu(mn_mdsx, size(mn_mdsx));
+								cout << "\n Mời bạn chọn: ";
+								cin >> chonmd;
+								switch (chonmd)
+								{
+								case 1:
+									system("cls");
+									ShakerSortSTT(danhsach, socv, 1);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 2:
+									system("cls");
+									ShakerSortSTT(danhsach, socv, 2);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 3:
+									cout << "\n Nhấn phím bất kì để quay lại...";
+									stop = _getch();
+									break;
+								}
+							} while (chonmd != 3);
 							break;
 						case 2:
-							system("cls");
-							ShakerSortTen(danhsach, socv);
-							InDS(danhsach, socv);
-							stop = _getch();
+							do
+							{
+								system("cls");
+								InMenu(mn_mdsx, size(mn_mdsx));
+								cout << "\n Mời bạn chọn: ";
+								cin >> chonmd;
+								switch (chonmd)
+								{
+								case 1:
+									system("cls");
+									ShakerSortTen(danhsach, socv, 1);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 2:
+									system("cls");
+									ShakerSortTen(danhsach, socv, 2);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 3:
+									cout << "\n Nhấn phím bất kì để quay lại...";
+									stop = _getch();
+									break;
+								}
+							} while (chonmd != 3);
 							break;
 						case 3:
-							system("cls");
-							ShakerSortHanNop(danhsach, socv);
-							InDS(danhsach, socv);
-							stop = _getch();
+							do
+							{
+								system("cls");
+								InMenu(mn_mdsx, size(mn_mdsx));
+								cout << "\n Mời bạn chọn: ";
+								cin >> chonmd;
+								switch (chonmd)
+								{
+								case 1:
+									system("cls");
+									ShakerSortHanNop(danhsach, socv, 1);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 2:
+									system("cls");
+									ShakerSortHanNop(danhsach, socv, 2);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 3:
+									cout << "\n Nhấn phím bất kì để quay lại...";
+									stop = _getch();
+									break;
+								}
+							} while (chonmd != 3);
 							break;
 						case 4:
-							system("cls");
-							ShakerSortSoluong(danhsach, socv);
-							InDS(danhsach, socv);
-							stop = _getch();
+							do
+							{
+								system("cls");
+								InMenu(mn_mdsx, size(mn_mdsx));
+								cout << "\n Mời bạn chọn: ";
+								cin >> chonmd;
+								switch (chonmd)
+								{
+								case 1:
+									system("cls");
+									ShakerSortSoluong(danhsach, socv, 1);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 2:
+									system("cls");
+									ShakerSortSoluong(danhsach, socv, 2);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 3:
+									cout << "\n Nhấn phím bất kì để quay lại...";
+									stop = _getch();
+									break;
+								}
+							} while (chonmd != 3);
 							break;
 						case 5:
-							system("cls");
-							ShakerSortLuong(danhsach, socv);
-							InDS(danhsach, socv);
-							stop = _getch();
+							do
+							{
+								system("cls");
+								InMenu(mn_mdsx, size(mn_mdsx));
+								cout << "\n Mời bạn chọn: ";
+								cin >> chonmd;
+								switch (chonmd)
+								{
+								case 1:
+									system("cls");
+									ShakerSortLuong(danhsach, socv, 1);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 2:
+									system("cls");
+									ShakerSortLuong(danhsach, socv, 2);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 3:
+									cout << "\n Nhấn phím bất kì để quay lại...";
+									stop = _getch();
+									break;
+								}
+							} while (chonmd != 3);
 							break;
 						case 6:
 							system("cls");
-							cout << "\nNhấn Enter để quay lại!";
+							cout << "\n Nhấn phím bất kì để quay lại...";
 							stop = _getch();
 							break;
 						}
@@ -1218,38 +1613,148 @@ int main()
 						switch (chontcsx)
 						{
 						case 1:
-							system("cls");
-							InsertionSortSTT(danhsach, socv);
-							InDS(danhsach, socv);
-							stop = _getch();
+							do
+							{
+								system("cls");
+								InMenu(mn_mdsx, size(mn_mdsx));
+								cout << "\n Mời bạn chọn: ";
+								cin >> chonmd;
+								switch (chonmd)
+								{
+								case 1:
+									system("cls");
+									InsertionSortSTT(danhsach, socv, 1);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 2:
+									system("cls");
+									InsertionSortSTT(danhsach, socv, 2);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 3:
+									cout << "\n Nhấn phím bất kì để quay lại...";
+									stop = _getch();
+									break;
+								}
+							} while (chonmd != 3);
 							break;
 						case 2:
-							system("cls");
-							InsertionSortTen(danhsach, socv);
-							InDS(danhsach, socv);
-							stop = _getch();
+							do
+							{
+								system("cls");
+								InMenu(mn_mdsx, size(mn_mdsx));
+								cout << "\n Mời bạn chọn: ";
+								cin >> chonmd;
+								switch (chonmd)
+								{
+								case 1:
+									system("cls");
+									InsertionSortTen(danhsach, socv, 1);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 2:
+									system("cls");
+									InsertionSortTen(danhsach, socv, 2);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 3:
+									cout << "\n Nhấn phím bất kì để quay lại...";
+									stop = _getch();
+									break;
+								}
+							} while (chonmd != 3);
 							break;
 						case 3:
-							system("cls");
-							InsertionSortHanNop(danhsach, socv);
-							InDS(danhsach, socv);
-							stop = _getch();
+							do
+							{
+								system("cls");
+								InMenu(mn_mdsx, size(mn_mdsx));
+								cout << "\n Mời bạn chọn: ";
+								cin >> chonmd;
+								switch (chonmd)
+								{
+								case 1:
+									system("cls");
+									InsertionSortHanNop(danhsach, socv, 1);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 2:
+									system("cls");
+									InsertionSortHanNop(danhsach, socv, 2);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 3:
+									cout << "\n Nhấn phím bất kì để quay lại...";
+									stop = _getch();
+									break;
+								}
+							} while (chonmd != 3);
 							break;
 						case 4:
-							system("cls");
-							InsertionSortSoluong(danhsach, socv);
-							InDS(danhsach, socv);
-							stop = _getch();
+							do
+							{
+								system("cls");
+								InMenu(mn_mdsx, size(mn_mdsx));
+								cout << "\n Mời bạn chọn: ";
+								cin >> chonmd;
+								switch (chonmd)
+								{
+								case 1:
+									system("cls");
+									InsertionSortSoluong(danhsach, socv, 1);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 2:
+									system("cls");
+									InsertionSortSoluong(danhsach, socv, 2);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 3:
+									cout << "\n Nhấn phím bất kì để quay lại...";
+									stop = _getch();
+									break;
+								}
+							} while (chonmd != 3);
 							break;
 						case 5:
-							system("cls");
-							InsertionSortLuong(danhsach, socv);
-							InDS(danhsach, socv);
-							stop = _getch();
+							do
+							{
+								system("cls");
+								InMenu(mn_mdsx, size(mn_mdsx));
+								cout << "\n Mời bạn chọn: ";
+								cin >> chonmd;
+								switch (chonmd)
+								{
+								case 1:
+									system("cls");
+									InsertionSortLuong(danhsach, socv, 1);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 2:
+									system("cls");
+									InsertionSortLuong(danhsach, socv, 2);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 3:
+									cout << "\n Nhấn phím bất kì để quay lại...";
+									stop = _getch();
+									break;
+								}
+							} while (chonmd != 3);
 							break;
 						case 6:
 							system("cls");
-							cout << "\nNhấn Enter để quay lại!";
+							cout << "\n Nhấn phím bất kì để quay lại...";
 							stop = _getch();
 							break;
 						}
@@ -1264,38 +1769,148 @@ int main()
 						switch (chontcsx)
 						{
 						case 1:
-							system("cls");
-							InterchangeSortSTT(danhsach, socv);
-							InDS(danhsach, socv);
-							stop = _getch();
+							do
+							{
+								system("cls");
+								InMenu(mn_mdsx, size(mn_mdsx));
+								cout << "\n Mời bạn chọn: ";
+								cin >> chonmd;
+								switch (chonmd)
+								{
+								case 1:
+									system("cls");
+									InterchangeSortSTT(danhsach, socv, 1);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 2:
+									system("cls");
+									InterchangeSortSTT(danhsach, socv, 2);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 3:
+									cout << "\n Nhấn phím bất kì để quay lại...";
+									stop = _getch();
+									break;
+								}
+							} while (chonmd != 3);
 							break;
 						case 2:
-							system("cls");
-							InterchangeSortTen(danhsach, socv);
-							InDS(danhsach, socv);
-							stop = _getch();
+							do
+							{
+								system("cls");
+								InMenu(mn_mdsx, size(mn_mdsx));
+								cout << "\n Mời bạn chọn: ";
+								cin >> chonmd;
+								switch (chonmd)
+								{
+								case 1:
+									system("cls");
+									InterchangeSortTen(danhsach, socv, 1);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 2:
+									system("cls");
+									InterchangeSortTen(danhsach, socv, 2);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 3:
+									cout << "\n Nhấn phím bất kì để quay lại...";
+									stop = _getch();
+									break;
+								}
+							} while (chonmd != 3);
 							break;
 						case 3:
-							system("cls");
-							InterchangeSortHanNop(danhsach, socv);
-							InDS(danhsach, socv);
-							stop = _getch();
+							do
+							{
+								system("cls");
+								InMenu(mn_mdsx, size(mn_mdsx));
+								cout << "\n Mời bạn chọn: ";
+								cin >> chonmd;
+								switch (chonmd)
+								{
+								case 1:
+									system("cls");
+									InterchangeSortHanNop(danhsach, socv, 1);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 2:
+									system("cls");
+									InterchangeSortHanNop(danhsach, socv, 2);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 3:
+									cout << "\n Nhấn phím bất kì để quay lại...";
+									stop = _getch();
+									break;
+								}
+							} while (chonmd != 3);
 							break;
 						case 4:
-							system("cls");
-							InterchangeSortSoluong(danhsach, socv);
-							InDS(danhsach, socv);
-							stop = _getch();
+							do
+							{
+								system("cls");
+								InMenu(mn_mdsx, size(mn_mdsx));
+								cout << "\n Mời bạn chọn: ";
+								cin >> chonmd;
+								switch (chonmd)
+								{
+								case 1:
+									system("cls");
+									InterchangeSortSoluong(danhsach, socv, 1);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 2:
+									system("cls");
+									InterchangeSortSoluong(danhsach, socv, 2);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 3:
+									cout << "\n Nhấn phím bất kì để quay lại...";
+									stop = _getch();
+									break;
+								}
+							} while (chonmd != 3);
 							break;
 						case 5:
-							system("cls");
-							InterchangeSortLuong(danhsach, socv);
-							InDS(danhsach, socv);
-							stop = _getch();
+							do
+							{
+								system("cls");
+								InMenu(mn_mdsx, size(mn_mdsx));
+								cout << "\n Mời bạn chọn: ";
+								cin >> chonmd;
+								switch (chonmd)
+								{
+								case 1:
+									system("cls");
+									InterchangeSortLuong(danhsach, socv, 1);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 2:
+									system("cls");
+									InterchangeSortLuong(danhsach, socv, 2);
+									InDS(danhsach, socv);
+									stop = _getch();
+									break;
+								case 3:
+									cout << "\n Nhấn phím bất kì để quay lại...";
+									stop = _getch();
+									break;
+								}
+							} while (chonmd != 3);
 							break;
 						case 6:
 							system("cls");
-							cout << "\nNhấn Enter để quay lại!";
+							cout << "\n Nhấn phím bất kì để quay lại...";
 							stop = _getch();
 							break;
 						}
@@ -1341,7 +1956,7 @@ int main()
 							break;
 						case 4:
 							system("cls");
-							cout << "\nQuay trở lại.";
+							cout << "\n Nhấn phím bất kì để quay lại...";
 							stop = _getch();
 							break;
 						}
@@ -1370,7 +1985,7 @@ int main()
 							break;
 						case 4:
 							system("cls");
-							cout << "\nQuay trở lại.";
+							cout << "\n Nhấn phím bất kì để quay lại...";
 							stop = _getch();
 							break;
 						}
@@ -1401,7 +2016,7 @@ int main()
 			system("cls");
 			string fileout = "Output.txt";
 			WriteFile(fileout, danhsach, socv);
-			cout << "\nIn file thành công!";
+			cout << "\nĐã ghi danh sách ra file!";
 			stop = _getch();
 			break;
 		}
