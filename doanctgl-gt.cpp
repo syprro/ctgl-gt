@@ -16,7 +16,7 @@ string mn_chinh[] = {
 	"Thêm thông tin công việc",
 	"Xóa thông tin công việc",
 	"Sửa thông tin công việc",
-	"In file thông tin",
+	"Ghi danh sách ra file",
 	"Kết thúc chương trình!."
 };
 string mn_sx[] = {
@@ -121,10 +121,10 @@ void InDS(TuyenDung ds[], int sl, int vt = -1)
 	int cot = 0;
 	int dong = 1;
 	gotoxy(cot, dong);       cout << "STT";
-	gotoxy(cot + 8, dong);   cout << "Tên công việc";
-	gotoxy(cot + 33, dong);  cout << "Hạn nộp";
-	gotoxy(cot + 47, dong);  cout << "Số lượng";
-	gotoxy(cot + 62, dong);  cout << "Mức lương";
+	gotoxy(cot + 8, dong);   cout << "TÊN CÔNG VIỆC";
+	gotoxy(cot + 33, dong);  cout << "HẠN NỘP";
+	gotoxy(cot + 47, dong);  cout << "SỐ LƯỢNG";
+	gotoxy(cot + 62, dong);  cout << "MỨC LƯƠNG";
 	if (vt == -1) {
 		for (int i = 0; i < sl; i++)
 		{
@@ -214,10 +214,10 @@ void LinearSearchHanNop(TuyenDung ds[], int sl)
 	int cot = 0;
 	int dong = 1;
 	gotoxy(cot, dong);       cout << "STT";
-	gotoxy(cot + 8, dong);   cout << "Tên công việc";
-	gotoxy(cot + 33, dong);  cout << "Hạn nộp";
-	gotoxy(cot + 47, dong);  cout << "Số lượng";
-	gotoxy(cot + 62, dong);  cout << "Mức lương";
+	gotoxy(cot + 8, dong);   cout << "TÊN CÔNG VIỆC";
+	gotoxy(cot + 33, dong);  cout << "HẠN NỘP";
+	gotoxy(cot + 47, dong);  cout << "SỐ LƯỢNG";
+	gotoxy(cot + 62, dong);  cout << "MỨC LƯƠNG";
 	for (int i = 0; i < sl; i++)
 	{
 		if (strcmp(ds[i].ngay, ngay) == 0 &&
@@ -250,11 +250,11 @@ void LinearSearchSoluong(TuyenDung ds[], int sl)
 	system("cls");
 	int cot = 0;
 	int dong = 1;
-	gotoxy(cot, dong);		cout << "STT";
-	gotoxy(cot + 8, dong);	cout << "Tên công việc";
-	gotoxy(cot + 33, dong);	cout << "Hạn nộp";
-	gotoxy(cot + 47, dong);	cout << "Số lượng";
-	gotoxy(cot + 62, dong);	cout << "Mức lương";
+	gotoxy(cot, dong);       cout << "STT";
+	gotoxy(cot + 8, dong);   cout << "TÊN CÔNG VIỆC";
+	gotoxy(cot + 33, dong);  cout << "HẠN NỘP";
+	gotoxy(cot + 47, dong);  cout << "SỐ LƯỢNG";
+	gotoxy(cot + 62, dong);  cout << "MỨC LƯƠNG";
 	for (int i = 0; i < sl; i++)
 	{
 		if (ds[i].soluong == sol)
@@ -287,10 +287,10 @@ void LinearSearchLuong(TuyenDung ds[], int sl)
 	int cot = 0;
 	int dong = 1;
 	gotoxy(cot, dong);       cout << "STT";
-	gotoxy(cot + 8, dong);   cout << "Tên công việc";
-	gotoxy(cot + 33, dong);  cout << "Hạn nộp";
-	gotoxy(cot + 47, dong);  cout << "Số lượng";
-	gotoxy(cot + 62, dong);  cout << "Mức lương";
+	gotoxy(cot + 8, dong);   cout << "TÊN CÔNG VIỆC";
+	gotoxy(cot + 33, dong);  cout << "HẠN NỘP";
+	gotoxy(cot + 47, dong);  cout << "SỐ LƯỢNG";
+	gotoxy(cot + 62, dong);  cout << "MỨC LƯƠNG";
 	for (int i = 0; i < sl; i++)
 	{
 		if (ds[i].luong == l)
@@ -514,10 +514,10 @@ void BinarySearchHanNop(TuyenDung ds[], int sl)
 	}
 	int cot = 0, dong = 2;
 	gotoxy(cot, dong);       cout << "STT";
-	gotoxy(cot + 8, dong);   cout << "Tên công việc";
-	gotoxy(cot + 33, dong);  cout << "Hạn nộp";
-	gotoxy(cot + 47, dong);  cout << "Số lượng";
-	gotoxy(cot + 62, dong);  cout << "Mức lương";
+	gotoxy(cot + 8, dong);   cout << "TÊN CÔNG VIỆC";
+	gotoxy(cot + 33, dong);  cout << "HẠN NỘP";
+	gotoxy(cot + 47, dong);  cout << "SỐ LƯỢNG";
+	gotoxy(cot + 62, dong);  cout << "MỨC LƯƠNG";
 	int dem = 0;
 	int i = vt;
 	while (i >= 0 && strcmp(ds[i].ngay, ngay) == 0 && strcmp(ds[i].thang, thang) == 0 && strcmp(ds[i].nam, nam) == 0)
@@ -582,10 +582,10 @@ void BinarySearchSoluong(TuyenDung ds[], int sl)
 		}
 		int cot = 0, dong = 2;
 		gotoxy(cot, dong);       cout << "STT";
-		gotoxy(cot + 8, dong);   cout << "Tên công việc";
-		gotoxy(cot + 33, dong);  cout << "Hạn nộp";
-		gotoxy(cot + 47, dong);  cout << "Số lượng";
-		gotoxy(cot + 62, dong);  cout << "Mức lương";
+		gotoxy(cot + 8, dong);   cout << "TÊN CÔNG VIỆC";
+		gotoxy(cot + 33, dong);  cout << "HẠN NỘP";
+		gotoxy(cot + 47, dong);  cout << "SỐ LƯỢNG";
+		gotoxy(cot + 62, dong);  cout << "MỨC LƯƠNG";
 		for (int j = 0; j < dem; j++)
 		{
 			dong = 4 + j;
@@ -646,10 +646,10 @@ void BinarySearchLuong(TuyenDung ds[], int sl)
 		}
 		int cot = 0, dong = 2;
 		gotoxy(cot, dong);       cout << "STT";
-		gotoxy(cot + 8, dong);   cout << "Tên công việc";
-		gotoxy(cot + 33, dong);  cout << "Hạn nộp";
-		gotoxy(cot + 47, dong);  cout << "Số lượng";
-		gotoxy(cot + 62, dong);  cout << "Mức lương";
+		gotoxy(cot + 8, dong);   cout << "TÊN CÔNG VIỆC";
+		gotoxy(cot + 33, dong);  cout << "HẠN NỘP";
+		gotoxy(cot + 47, dong);  cout << "SỐ LƯỢNG";
+		gotoxy(cot + 62, dong);  cout << "MỨC LƯƠNG";
 		for (int j = 0; j < dem; j++)
 		{
 			dong = 4 + j;
