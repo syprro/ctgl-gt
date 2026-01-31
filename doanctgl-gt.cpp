@@ -542,7 +542,7 @@ void BinarySearchHanNop(TuyenDung ds[], int sl)
 void BinarySearchSoluong(TuyenDung ds[], int sl)
 {
 	int stop;
-	float x;
+	int x;
 	cout << "\nNhập số lượng nhân viên cần tuyển của công việc cần tìm: ";
 	cin >> x;
 	BubbleSortSoLuong(ds, sl, 1);
@@ -614,7 +614,7 @@ void BinarySearchLuong(TuyenDung ds[], int sl)
 	cout << "Lưu ý: Danh sách đã được sắp xếp theo mức lương! (MĐ: Tăng dần)\n";
 	int dau = 0, cuoi = sl - 1;
 	int giua;
-	int vt = -1;  
+	int vt = -1;
 	while (dau <= cuoi)
 	{
 		giua = (dau + cuoi) / 2;
@@ -716,9 +716,9 @@ void SelectionSortHanNop(TuyenDung ds[], int sl, int kieu)
 		int min = i;
 		for (int j = i + 1; j < sl; j++)
 		{
-			if (kieu == 1 &&(strcmp(ds[j].nam, ds[min].nam) < 0 || 
-				(strcmp(ds[j].nam, ds[min].nam) == 0 &&strcmp(ds[j].thang, ds[min].thang) < 0) || 
-				(strcmp(ds[j].nam, ds[min].nam) == 0 &&strcmp(ds[j].thang, ds[min].thang) == 0 && strcmp(ds[j].ngay, ds[min].ngay) < 0)))
+			if (kieu == 1 && (strcmp(ds[j].nam, ds[min].nam) < 0 ||
+				(strcmp(ds[j].nam, ds[min].nam) == 0 && strcmp(ds[j].thang, ds[min].thang) < 0) ||
+				(strcmp(ds[j].nam, ds[min].nam) == 0 && strcmp(ds[j].thang, ds[min].thang) == 0 && strcmp(ds[j].ngay, ds[min].ngay) < 0)))
 			{
 				min = j;
 			}
@@ -934,7 +934,7 @@ void InsertionSortTen(TuyenDung ds[], int sl, int kieu)
 	{
 		a = ds[i];
 		t = i - 1;
-		while (t >= 0 && 
+		while (t >= 0 &&
 			((kieu == 1 && strcmp(a.tenCV, ds[t].tenCV) < 0) || (kieu == 2 && strcmp(a.tenCV, ds[t].tenCV) > 0)))
 		{
 			ds[t + 1] = ds[t];
@@ -1170,7 +1170,7 @@ void XoaTTCV(TuyenDung ds[], int& sl)
 		int stop = _getch();
 		break;
 	}
-	case 2: 
+	case 2:
 	{
 		char stt[4];
 		int tim = -1;
@@ -1214,10 +1214,25 @@ void SuaTTCV(TuyenDung ds[], int& sl)
 	}
 	char stt[4];
 	int tim = -1;
-	system("cls");
-	cout << "SỬA THÔNG TIN CÔNG VIỆC";
-	cout << "\nNhập STT cần sửa: ";
-	cin >> stt;
+	do
+	{
+		system("cls");
+		cout << "SỬA THÔNG TIN CÔNG VIỆC";
+		cout << "\nNhập STT cần sửa (3 chữ số): ";
+		cin >> stt;
+		if (strlen(stt) != 3)
+		{
+			cout << "\nSTT phải gồm đúng 3 chữ số!";
+			cout << "\nNhấn phím bất kỳ để nhập lại...";
+			stop = _getch();
+		}
+		else if (strspn(stt, "0123456789") != strlen(stt))
+		{
+			cout << "\nSTT chỉ được nhập số, không được nhập chữ!";
+			cout << "\nNhấn phím bất kỳ để nhập lại...";
+			stop = _getch();
+		}
+	} while (strlen(stt) != 3 || strspn(stt, "0123456789") != strlen(stt));
 	for (int i = 0; i < sl; i++)
 	{
 		if (strcmp(ds[i].stt, stt) == 0)
@@ -1294,7 +1309,6 @@ void SuaTTCV(TuyenDung ds[], int& sl)
 }
 void WriteFile(string filename, TuyenDung ds[], int sl)
 {
-
 	ofstream outfile(filename.c_str());
 	if (!outfile)
 	{
@@ -1316,6 +1330,7 @@ int main()
 	SetConsoleCP(CP_UTF8);
 	TuyenDung danhsach[MAX];
 	int socv = 0, stop;
+	int daSapXep = 0;
 	string FileIn = "TuyenDung.txt";
 	// Nếu không đọc được file -> kết thúc
 	if (ReadFile(FileIn, danhsach, socv))
